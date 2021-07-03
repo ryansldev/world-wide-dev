@@ -8,7 +8,20 @@ export const GlobalStyle = createGlobalStyle`
   };
 
   html {
-    background-color: #1d1d1d;
-    color: #FFF;
+    background-color: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.heading};
   };
+
+  h1, h2, h3, h4, h5, h6 {
+    font: ${props => props.theme.fonts.title};
+  }
+
+  p, span {
+    font: ${props => props.theme.fonts.heading500};
+  }
+
+  strong, b {
+    font: ${props => props.theme.fonts.title};
+    font-size: 1rem;
+  }
 `;

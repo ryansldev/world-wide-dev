@@ -4,12 +4,10 @@ import { GlobalStyle } from "../styles/Global";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </>
+      <Component {...pageProps} />
+    </ThemeProvider>
   );
 }
 
