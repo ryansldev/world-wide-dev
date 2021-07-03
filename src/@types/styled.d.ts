@@ -10,7 +10,7 @@ declare module "styled-components" {
       heading: string;
       background: string;
     };
-    fontsFamily: {
+    fonts: {
       title: string;
       subtitle: string;
       heading500: string;
