@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 export const StyledLoginButton = styled.form`
+  display: flex;
+  justify-content: center;
+
   & > button{
     width: 100%;
     max-width: 20rem;
