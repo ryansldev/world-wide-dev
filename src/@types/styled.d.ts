@@ -12,6 +12,7 @@ declare module "styled-components" {
       heading: string;
       background: string;
       placeholder: string;
+      loginButton: string;
       white: string;
     };
     fonts: {

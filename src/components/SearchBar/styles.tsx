@@ -31,6 +31,6 @@ export const StyledSearchBar = styled.div`
     margin-left: -3.225rem;
     margin-top: 1.56rem;
     font-size: 1.4rem;
-    color: ${(props) => props.theme.colors.primaryLight}
+    color: ${(props) => props.theme.colors.primary300}
   }
 `;

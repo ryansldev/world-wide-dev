@@ -9,6 +9,7 @@ export const theme = {
     heading: "#B2B2B2",
     background: "#F5F5F5",
     placeholder: "#CCCCCC",
+    loginButton: "#4D4D4D",
     white: "#FFFFFF",
   },
   fonts: {
