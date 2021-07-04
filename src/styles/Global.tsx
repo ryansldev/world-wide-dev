@@ -24,4 +24,15 @@ export const GlobalStyle = createGlobalStyle`
     font: ${props => props.theme.fonts.title};
     font-size: 1rem;
   }
+
+  a {
+    font: ${props => props.theme.fonts.heading500};
+    color: ${props => props.theme.colors.primary300};
+    transition: filter .2s;
+    text-decoration: none;
+
+    &:hover {
+      filter: brightness(.88);
+    }
+  }
 `;
