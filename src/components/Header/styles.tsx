@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const StyledHeader = styled.header`
-  width: 100vw;
+  width: 100%;
   height: 25rem;
   background-color: ${(props) => props.theme.colors.primary};
 
-  @media(max-width: 512px) {
+  @media (max-width: 512px) {
     height: 20rem;
   }
 
@@ -22,5 +22,5 @@ export const StyledHeader = styled.header`
       width: 100%;
       height: 100%;
     }
-  }  
+  }
 `;
