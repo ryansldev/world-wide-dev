@@ -1,18 +1,14 @@
-import { FormEvent } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { StyledLoginButton } from "./styles";
 
-export function LoginButton() {
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-  }
-
+export function LoginButton({...rest}: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <StyledLoginButton onSubmit={handleSubmit}>
-      <button type="submit">
-        <FaGithub />
-        <span>SigIn with your GitHub</span>
-      </button>
+    <StyledLoginButton
+      {...rest}
+    >
+      <FaGithub />
+      <span>SigIn with your GitHub</span>
     </StyledLoginButton>
   )
 }
