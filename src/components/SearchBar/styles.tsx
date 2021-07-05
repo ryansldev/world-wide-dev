@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const StyledSearchBar = styled.div`
   > input {
-    width: 100%;
-    max-width: 30rem;
+    width: 30rem;
+    max-width: 100%;
     height: 4.5rem;
 
     font: ${(props) => props.theme.fonts.heading500};
