@@ -12,7 +12,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "debug": "NODE_OPTIONS='--inspect' next dev"
   },
   "dependencies": {
     "axios": "^0.21.1",
