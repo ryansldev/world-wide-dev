@@ -9,22 +9,28 @@ export const Main = styled.main`
     max-width: 90vw;
     margin: 0 auto;
 
-    > img {
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      border: 4px solid ${(props) => props.theme.colors.primary};
-      margin-bottom: 1rem;
-    }
+    > a {
+      img {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        border: 4px solid ${(props) => props.theme.colors.primary};
+        margin-bottom: 1rem;
+      }
 
-    > h1 {
-      color: ${(props) => props.theme.colors.primary};
-    }
+      > h1 {
+        color: ${(props) => props.theme.colors.primary};
+      }
 
-    > h2 {
-      font: ${(props) => props.theme.fonts.subtitle};
-      color: ${(props) => props.theme.colors.primary400};
-      margin-bottom: 1.875rem;
+      > h2 {
+        font: ${(props) => props.theme.fonts.subtitle};
+        color: ${(props) => props.theme.colors.primary400};
+        margin-bottom: 1.875rem;
+      }
+
+      &:hover {
+        filter: none;
+      }
     }
 
     > p {

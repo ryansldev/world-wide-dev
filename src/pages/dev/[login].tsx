@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail } from 'react-icons/fi';
 import { useRouter } from 'next/router';
@@ -59,12 +60,17 @@ export default function Dev() {
 
   return (
     <>
+      <Head>
+        <title>{`${dev.name ? `${dev.name}` : 'Dev'} | WWD`}</title>
+      </Head>
       <Header />
       <Main>
         <div className="container">
-          <img src={dev.avatar_url} alt={dev.name} />
-          <h1>{dev.name}</h1>
-          <h2>@{login}</h2>
+          <a href={dev.html_url} target="_blank" rel="noopener noreferrer">
+            <img src={dev.avatar_url} alt={dev.name} />
+            <h1>{dev.name}</h1>
+            <h2>@{login}</h2>
+          </a>
           <p>{dev.bio}</p>
           <div className="more-infos">
             {dev.location &&
