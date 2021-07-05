@@ -18,6 +18,10 @@ export const StyledHeader = styled.header`
     align-items: center;
     margin: 0 auto;
 
+    a:hover {
+      filter: brightness(1.1);
+    }
+
     img {
       width: 100%;
       height: 100%;

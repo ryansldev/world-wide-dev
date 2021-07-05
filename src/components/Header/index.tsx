@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { StyledHeader } from "./styles";
 
@@ -7,7 +8,11 @@ export function Header() {
   return (
     <StyledHeader>
       <div>
-        <Image src={LogoPNG} alt="World wide dev" />
+        <Link href="/" passHref>
+          <a>
+            <Image src={LogoPNG} alt="World wide dev" />
+          </a>
+        </Link>
       </div>
     </StyledHeader>
   );
