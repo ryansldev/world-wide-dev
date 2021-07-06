@@ -26,11 +26,18 @@ export const StyledSearchBar = styled.div`
     }
   }
 
-  > svg {
+  > button {
+    border: 0;
+    outline: 0;
     position: absolute;
     margin-left: -3.225rem;
     margin-top: 1.56rem;
-    font-size: 1.4rem;
-    color: ${(props) => props.theme.colors.primary300}
+    background: transparent;
+    cursor: pointer;
+
+    svg {
+      font-size: 1.4rem;
+      color: ${(props) => props.theme.colors.primary300};
+    }
   }
 `;

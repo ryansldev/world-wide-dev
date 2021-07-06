@@ -5,7 +5,9 @@ import { api as githubAPI } from "../services/github";
 
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
+import { FilterInput } from '../components/FilterInput';
 import { MinifiedDevCard } from "../components/MinifiedDevCard";
+import { SearchForm } from "../components/SearchForm";
 
 import { Main } from "../styles/pages/Dashboard";
 
@@ -17,23 +19,46 @@ type User = {
 };
 
 export default function Home() {
-  const [search, setSearch] = useState("");
   const [devs, setDevs] = useState<User[]>([]);
+
+  /* FORM */
+  const [username, setUsername] = useState('');
+  const [location, setLocation] = useState('');
+  const [language, setLanguage] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
 
   async function handleSearchUser(event: FormEvent) {
     event.preventDefault();
 
-    if (!search.trim()) {
-      return;
+    var query: string = '';
+
+    if(username) {
+      query = query+`${username} in:name `;
+    }
+
+    if(location) {
+      query = query+`location:${location} `;
+    }
+
+    if(language) {
+      query = query+`language:${language} `;
     }
 
     const result = await githubAPI.get(`search/users`, {
       params: {
-        q: `${search} in:name`,
+        q: query,
       },
     });
 
     setDevs(result?.data?.items || []);
+  }
+
+  function handleShowFilter() {
+    if(showFilter) {
+      setShowFilter(false);
+    } else {
+      setShowFilter(true);
+    }
   }
 
   return (
@@ -43,14 +68,39 @@ export default function Home() {
       </Head>
       <Header />
       <Main>
-        <form action="GET" onSubmit={handleSearchUser}>
+        <SearchForm showFilter={showFilter} onSubmit={handleSearchUser}>
           <SearchBar
             type="text"
-            placeholder="Put a name"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => setUsername(event.target.value)}
+            value={username}
+            filterButtonShow={handleShowFilter}
           />
-        </form>
+          <div className="box-filter">
+            <FilterInput
+              type="text"
+              id="location"
+              name="location"
+              htmlFor="location"
+              placeholder="ex: Brazil"
+              onChange={(event) => setLocation(event.target.value)}
+              value={location}
+              labelTitle={'localização'}
+            />
+            <FilterInput
+              type="text"
+              id="language"
+              name="language"
+              htmlFor="language"
+              placeholder="ex: JavaScript"
+              onChange={(event) => setLanguage(event.target.value)}
+              value={language}
+              labelTitle={'linguagem'}
+            />
+            <button type="submit">
+              Filtrar pesquisa
+            </button>
+          </div>
+        </SearchForm>
 
         <section>
           {devs.map((dev) => {
