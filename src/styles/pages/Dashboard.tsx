@@ -9,6 +9,10 @@ export const Main = styled.main`
   > form {
     max-width: 90vw;
     margin-top: -2.125rem;
+
+    input[name="language"]::placeholder {
+      font-size: 0.875rem;
+    }
   }
 
   > section {

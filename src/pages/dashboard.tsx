@@ -92,7 +92,7 @@ export default function Home() {
               id="language"
               name="language"
               htmlFor="language"
-              placeholder="ex: JavaScript"
+              placeholder="ex: JavaScript(Devs que utilizam majoritariamente)"
               onChange={(event) => setLanguage(event.target.value)}
               value={language}
               labelTitle={'linguagem'}
