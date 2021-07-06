@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail } from 'react-icons/fi';
+import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 
 import { Header } from '../../components/Header';
@@ -24,6 +25,7 @@ type Dev = {
   location?: string;
   blog?: string;
   email?: string;
+  company?: string;
   twitter_username?: string;
 }
 
@@ -47,7 +49,7 @@ export default function Dev() {
 
     async function devData() {
       const { data: devData } = await githubAPI.get(`/users/${login}`);
-      if(!devData.blog.includes('https://')) {
+      if(devData.blog && !devData.blog.includes('https://')) {
         devData.blog = (`https://${devData.blog}`);
       };
       const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
@@ -68,7 +70,7 @@ export default function Dev() {
         <div className="container">
           <a href={dev.html_url} target="_blank" rel="noopener noreferrer">
             <img src={dev.avatar_url} alt={dev.name} />
-            <h1>{dev.name}</h1>
+            <h1>{dev.name ? dev.name : dev.login}</h1>
             <h2>@{login}</h2>
           </a>
           <p>{dev.bio}</p>
@@ -101,6 +103,12 @@ export default function Dev() {
                 <span>{dev.email}</span>
               </div>
             }
+            {dev.company &&
+              <div>
+                <RiBuilding2Line />
+                <span>{dev.company}</span>
+              </div>
+            }
             {dev.twitter_username &&
               <div>
                 <FiTwitter />
@@ -111,7 +119,7 @@ export default function Dev() {
             }
           </div>
           <section className="following">
-            {following !== [] ? <span>Quem <strong>{dev.name}</strong> segue?</span> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
+            {following !== [] ? <span>Quem <strong>{dev.name ? dev.name : dev.login}</strong> segue?</span> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
             <div>
               {following.map((dev) => {
                 return (
