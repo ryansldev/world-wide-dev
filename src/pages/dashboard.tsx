@@ -74,6 +74,7 @@ export default function Home() {
             onChange={(event) => setUsername(event.target.value)}
             value={username}
             filterButtonShow={handleShowFilter}
+            placeholder="Put a name of a developer"
           />
           <div className="box-filter">
             <FilterInput
