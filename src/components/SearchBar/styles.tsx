@@ -6,7 +6,7 @@ export const StyledSearchBar = styled.div`
     max-width: 100%;
     height: 4.5rem;
 
-    font: ${(props) => props.theme.fonts.heading500};
+    font: ${(props) => props.theme.fonts.heading400};
     color: ${(props) => props.theme.colors.heading};
 
     padding: 0 4em 0 2rem;
