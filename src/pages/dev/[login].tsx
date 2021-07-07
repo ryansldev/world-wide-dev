@@ -48,7 +48,12 @@ export default function Dev() {
     }
 
     async function devData() {
-      const { data: devData } = await githubAPI.get(`/users/${login}`);
+      const token = sessionStorage.getItem('access_token');
+      const { data: devData } = await githubAPI.get(`/users/${login}`, {
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        }
+      });
       if(devData.blog && !devData.blog.includes('https://')) {
         devData.blog = (`https://${devData.blog}`);
       };

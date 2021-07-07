@@ -58,6 +58,10 @@ type AuthContextProviderProps = {
   children: ReactNode;
 };
 
+type CredentialGithub = firebase.auth.AuthCredential & {
+  accessToken: string;
+}
+
 const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProviderProps) {
@@ -67,6 +71,8 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     const provider = new firebase.auth.GithubAuthProvider();
 
     const result = await auth.signInWithPopup(provider);
+    const { accessToken } = result.credential as CredentialGithub;
+    sessionStorage.setItem('access_token', accessToken);
 
     if (!result?.user || !result?.additionalUserInfo?.profile) {
       throw new Error("Missing information from Google Account.");
@@ -85,7 +91,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     } = result?.additionalUserInfo?.profile as FirebaseResultProfile;
 
     if (!uid || !email || !githubId || !login || !name || !avatar_url) {
-      throw new Error("Missing information from Google Account.");
+      throw new Error("Missing information from GitHub Account.");
     }
 
     const user = {
