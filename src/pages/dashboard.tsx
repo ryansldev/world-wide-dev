@@ -71,7 +71,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>WWD - world wide dev</title>
+        <title>WWD - dashboard</title>
       </Head>
       <Header />
       <Main>

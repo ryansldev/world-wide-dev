@@ -9,6 +9,7 @@ export const StyledFilterInput = styled.label`
   text-align: center;
 
   > input {
+    width: 100%;
     padding: 0.875rem 1.625rem;
     border-radius: .5rem;
     background: #F0F0F0;

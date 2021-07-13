@@ -57,7 +57,7 @@ export const StyledMinifiedDevCard = styled.a`
 
   @media (max-width: 574px) {
     width: 90vw;
-    max-width: 80vw;
+    max-width: 90vw;
     padding: 1.5rem 1rem;
   }
 `;
