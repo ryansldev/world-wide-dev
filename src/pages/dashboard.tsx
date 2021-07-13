@@ -1,7 +1,7 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import { useState, FormEvent } from "react";
 
-import { useAuth } from '../hooks/useAuth';
 import { api as githubAPI } from "../services/github";
 
 import { Header } from "../components/Header";
@@ -17,9 +17,16 @@ type User = {
   login: string;
   html_url: string;
   avatar_url?: string;
+  registered?: boolean;
 };
 
-export default function Home() {
+type dashboardProps = {
+  usersIds: string[]; // static props
+}
+
+import { database } from "../services/firebase";
+
+export default function Home({ usersIds }: dashboardProps) {
   const [devs, setDevs] = useState<User[]>([]);
 
   /* FORM */
@@ -34,18 +41,18 @@ export default function Home() {
     var query: string = '';
     const token = sessionStorage.getItem('access_token');
 
-    if(username.includes('@')) {
-      query = query+`${username.substring(1).trim()} in:login`
+    if (username.includes('@')) {
+      query = query + `${username.substring(1).trim()} in:login`
     } else {
-      query = query+`${username.trim()} in:name `;
+      query = query + `${username.trim()} in:name `;
     }
 
-    if(location) {
-      query = query+`location:${location.trim()} `;
+    if (location) {
+      query = query + `location:${location.trim()} `;
     }
 
-    if(language) {
-      query = query+`language:${language.trim()} `;
+    if (language) {
+      query = query + `language:${language.trim()} `;
     }
 
     const result = await githubAPI.get(`search/users`, {
@@ -57,15 +64,27 @@ export default function Home() {
       },
     });
 
-    setDevs(result?.data?.items || []);
+    const usersResponseData = result?.data?.items as User[];
+
+    if (!usersResponseData || usersResponseData?.length === 0) {
+      return;
+    }
+
+    if (!usersIds) {
+      setDevs(usersResponseData);
+      return;
+    }
+
+    const users = usersResponseData.map((user) => {
+      usersIds.includes(user.id) ? user.registered = true : user.registered = false;
+      return user;
+    });
+
+    setDevs(users);
   }
 
   function handleShowFilter() {
-    if(showFilter) {
-      setShowFilter(false);
-    } else {
-      setShowFilter(true);
-    }
+    setShowFilter(!showFilter);
   }
 
   return (
@@ -118,6 +137,7 @@ export default function Home() {
                 login={dev.login}
                 avatar_url={dev.avatar_url}
                 html_url={dev.html_url}
+                registered={dev.registered}
               />
             );
           })}
@@ -126,3 +146,40 @@ export default function Home() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  type User = {
+    uid: string;
+    githubId: string;
+    login: string;
+    name: string;
+    avatar_url: string;
+    email?: string;
+    bio?: string;
+    blog?: string;
+    company?: string;
+    location?: string;
+  };
+
+  const userRef = database.ref("users");
+  const userSnap = await userRef.get();
+  const usersFirebase = await userSnap.val() as User[];
+
+  if (!usersFirebase || usersFirebase.length === 0) {
+    return {
+      props: {},
+      revalidate: 60,
+    }
+  }
+
+  const users = Object.entries(usersFirebase).map(([key, value]) => value);
+
+  const usersIds = users.map((user) => user.githubId);
+
+  return {
+    props: {
+      usersIds,
+    },
+    revalidate: 60,
+  };
+};
