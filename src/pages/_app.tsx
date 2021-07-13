@@ -1,4 +1,5 @@
 import { AuthProvider } from "../contexts/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 import { ThemeProvider } from "styled-components";
 import { theme } from "../global/theme";
@@ -10,6 +11,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Component {...pageProps} />
+        <Toaster />
       </ThemeProvider>
     </AuthProvider>
   );

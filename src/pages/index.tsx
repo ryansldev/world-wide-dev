@@ -2,10 +2,12 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useAuth } from "../hooks/useAuth";
 
-import { HomeStyled } from '../styles/Home';
+import toast from "react-hot-toast";
 
 import { Header } from '../components/Header';
 import { LoginButton } from '../components/LoginButton';
+
+import { HomeStyled } from '../styles/Home';
 
 export default function Home() {
   const router = useRouter();
@@ -13,10 +15,49 @@ export default function Home() {
 
   async function handleSignWithGithub() {
     if(!user) {
-      await signWithGithub();
-    }
+      signWithGithub()
+      .then(() => {
+        toast.success("Welcome to W.W.D :)", {
+          style: {
+            background: "#00c972",
+            color: "#FFF",
+            fontFamily: "Poppins, sans-serif"
+          },
+          iconTheme: {
+            primary: "#FFF",
+            secondary: "#00c972"
+          }
+        });
 
-    router.push('/dashboard');
+        router.push('/dashboard');
+      })
+      .catch((error) => {
+        toast.error(`${error}`, {
+          style: {
+            background: "#F56565",
+            color: "#FFF",
+            fontFamily: "Poppins, sans-serif"
+          },
+          iconTheme: {
+            primary: "#FFF",
+            secondary: "#F56565"
+          }
+        });
+      });
+    } else {
+      toast.success("You already logged in!", {
+        style: {
+          background: "#00c972",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#00c972"
+        }
+      });
+      router.push('/dashboard');
+    }
   }
 
   return (
