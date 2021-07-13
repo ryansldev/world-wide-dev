@@ -15,7 +15,14 @@ export const StyledLoginButton = styled.button`
   gap: .875rem;
   cursor: pointer;
 
+  transition: color .2s, background .2s;
+
   & > svg {
     font-size: 1.6rem;
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.loginButton};
+    color: ${(props) => props.theme.colors.white};
   }
 `;
