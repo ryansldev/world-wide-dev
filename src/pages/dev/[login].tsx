@@ -5,11 +5,11 @@ import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 
 import { Header } from '../../components/Header';
-import { MinifiedDevCard } from '../../components/MinifiedDevCard';
+import { DevsList } from '../../components/DevsList';
 
 import { api as githubAPI } from '../../services/github';
 
-import { Main } from '../../styles/pages/Dev';
+import { Main, Title } from '../../styles/pages/Dev';
 
 type DevQueryParams = {
   login?: string,
@@ -123,21 +123,10 @@ export default function Dev() {
               </div>
             }
           </div>
-          <section className="following">
-            {following !== [] ? <span>Quem <strong>{dev.name ? dev.name : dev.login}</strong> segue?</span> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
-            <div>
-              {following.map((dev) => {
-                return (
-                  <MinifiedDevCard
-                    key={dev.id}
-                    login={dev.login}
-                    avatar_url={dev.avatar_url}
-                    html_url={dev.html_url}
-                  />
-                );
-              })}
-            </div>
-          </section>
+
+          <DevsList devs={following}>
+            {following !== [] ? <Title>Quem <strong>{dev.name ? dev.name : dev.login}</strong> segue?</Title> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
+          </DevsList>
         </div>
       </Main>
     </>

@@ -78,36 +78,16 @@ export const Main = styled.main`
         }
       }
     }
-
-    > section {
-      margin-top: 7.5rem;
-      color: ${(props) => props.theme.colors.primary400};
-
-      > span {
-        font: ${(props) => props.theme.fonts.heading400};
-        font-size: 2rem;
-
-        strong {
-          font-size: 2rem;
-        }
-      }
-
-      > div {
-        max-width: 90vw;
-        width: 73.125rem;
-
-        margin: 3.75rem 0;
-
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(16.125rem, auto));
-        justify-content: center;
-        gap: 1.5rem 0;
-
-        @media (max-width: 572px) {
-          display: flex;
-          flex-direction: column;
-        }
-      }
-    }
   }
 `
+
+export const Title = styled.h1`
+  margin-top: 7.5rem;
+  font: ${(props) => props.theme.fonts.heading400};
+  color: ${(props) => props.theme.colors.primary400};
+  font-size: 2rem;
+
+  strong {
+    font-size: 2rem;
+  }
+`;
