@@ -85,7 +85,7 @@ export const Main = styled.main`
 export const Title = styled.h1`
   margin-top: 7.5rem;
   font: ${(props) => props.theme.fonts.heading400};
-  color: ${(props) => props.theme.colors.primary400};
+  color: ${(props) => props.theme.colors.subtitle};
   font-size: 2rem;
 
   strong {
