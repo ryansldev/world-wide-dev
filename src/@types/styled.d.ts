@@ -14,6 +14,7 @@ declare module "styled-components" {
       placeholder: string;
       loginButton: string;
       white: string;
+      darkBluePrimary: string;
     };
     fonts: {
       title: string;
