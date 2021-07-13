@@ -43,7 +43,7 @@ export const StyledMinifiedDevCard = styled.a`
   footer {
     display: flex;
     align-items: center;
-    color: ${(props) => props.theme.colors.primary300};
+    color: ${(props) => props.theme.colors.primary400};
     gap: 0.5rem;
 
     svg {

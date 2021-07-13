@@ -27,7 +27,7 @@ export const GlobalStyle = createGlobalStyle`
 
   a {
     font: ${props => props.theme.fonts.heading500};
-    color: ${props => props.theme.colors.primary300};
+    color: ${props => props.theme.colors.primary400};
     transition: filter .2s;
     text-decoration: none;
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledHeader = styled.header`
   width: 100%;
   height: 25rem;
-  background-color: ${(props) => props.theme.colors.primary};
+  background-color: ${(props) => props.theme.colors.darkBluePrimary};
 
   @media (max-width: 512px) {
     height: 20rem;

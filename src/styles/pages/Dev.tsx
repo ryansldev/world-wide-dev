@@ -14,17 +14,16 @@ export const Main = styled.main`
         border-radius: 50%;
         width: 100px;
         height: 100px;
-        border: 4px solid ${(props) => props.theme.colors.primary};
         margin-bottom: 1rem;
       }
 
       > h1 {
-        color: ${(props) => props.theme.colors.primary};
+        color: ${(props) => props.theme.colors.subtitle};
       }
 
       > h2 {
         font: ${(props) => props.theme.fonts.subtitle};
-        color: ${(props) => props.theme.colors.primary400};
+        color: ${(props) => props.theme.colors.subtitle};
         margin-bottom: 1.875rem;
       }
 
@@ -48,7 +47,7 @@ export const Main = styled.main`
       margin-top: 2.5rem;
 
       gap: 1rem;
-      color: ${(props) => props.theme.colors.primary300};
+      color: ${(props) => props.theme.colors.primary};
 
       > div  {
         display: flex;
@@ -64,6 +63,8 @@ export const Main = styled.main`
         > a, span {
           flex: 1;
           text-align: left;
+          font-weight: 400;
+          color: ${(props) => props.theme.colors.primary};
         }
 
         > a {
@@ -72,8 +73,8 @@ export const Main = styled.main`
           text-overflow: ellipsis;
 
           &:hover {
-            color: ${(props) => props.theme.colors.primary300};
             filter: none;
+            color: ${(props) => props.theme.colors.primary};
           }
         }
       }
@@ -81,7 +82,7 @@ export const Main = styled.main`
 
     > section {
       margin-top: 7.5rem;
-      color: ${(props) => props.theme.colors.primary400};
+      color: ${(props) => props.theme.colors.subtitle};
 
       > span {
         font: ${(props) => props.theme.fonts.heading400};

@@ -9,7 +9,7 @@ type FilterInputProps = InputHTMLAttributes<HTMLInputElement> & {
 export function FilterInput({ htmlFor, labelTitle, ...rest }: FilterInputProps) {
   return (
     <StyledFilterInput htmlFor={htmlFor}>
-      Por qual {labelTitle} deseja filtrar sua busca?
+      Which {labelTitle} do you want to filter your search?
       <input
         {...rest}
       />

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const StyledFilterInput = styled.label`
   font: ${(props) => props.theme.fonts.heading500};
-  color: ${(props) => props.theme.colors.primary400};
+  color: ${(props) => props.theme.colors.heading};
 
   display: grid;
   gap: 0.875rem;

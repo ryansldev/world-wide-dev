@@ -37,7 +37,7 @@ export const StyledSearchBar = styled.div`
 
     svg {
       font-size: 1.4rem;
-      color: ${(props) => props.theme.colors.primary300};
+      color: ${(props) => props.theme.colors.primary400};
     }
   }
 `;

@@ -27,7 +27,7 @@ export const StyledSearchForm = styled.form<SearchFormStyledProps>`
     > button[type="submit"] {
       width: 100%;
       padding: 1rem;
-      background: ${(props) => props.theme.colors.primary300};
+      background: ${(props) => props.theme.colors.primary400};
       color: ${(props) => props.theme.colors.white};
       font: ${(props) => props.theme.fonts.heading500};
 
