@@ -67,6 +67,7 @@ export default function Home({ usersIds }: dashboardProps) {
     const usersResponseData = result?.data?.items as User[];
 
     if (!usersResponseData || usersResponseData?.length === 0) {
+      setDevs([]);
       return;
     }
 
