@@ -6,13 +6,13 @@ type MinifiedDevCardProps = {
   login: string;
   html_url: string;
   avatar_url: string;
-  verified_user?: boolean;
+  registered?: boolean;
 };
 
 export function MinifiedDevCard({
   login,
   avatar_url,
-  verified_user = true,
+  registered = false,
 }: MinifiedDevCardProps) {
   return (
     <article>
@@ -24,7 +24,7 @@ export function MinifiedDevCard({
 
           <strong>@{login}</strong>
 
-          {verified_user && (
+          {registered && (
             <footer>
               <FiUserCheck />
               <span>Signed User</span>
