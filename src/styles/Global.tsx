@@ -12,6 +12,20 @@ export const GlobalStyle = createGlobalStyle`
     color: ${props => props.theme.colors.heading};
   };
 
+  body {
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: ${props => props.theme.colors.background}; 
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: ${props => props.theme.colors.primary}; 
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font: ${props => props.theme.fonts.title};
   }

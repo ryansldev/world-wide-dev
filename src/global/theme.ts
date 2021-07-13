@@ -1,17 +1,4 @@
 export const theme = {
-  // colors: {
-  //   primary: "#3A7FFF",
-  //   primary300: "#64B1FF",
-  //   primary400: "#469FFF",
-  //   secondary: "#FFBA3A",
-  //   title: "#666666",
-  //   subtitle: "#999999",
-  //   heading: "#B2B2B2",
-  //   background: "#F5F5F5",
-  //   placeholder: "#CCCCCC",
-  //   loginButton: "#4D4D4D",
-  //   white: "#FFFFFF",
-  // },
   colors: {
     primary: "#00c972",
     primary300: "#8edfad",
