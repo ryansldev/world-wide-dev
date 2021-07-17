@@ -1,5 +1,6 @@
-import { useState, createContext, ReactNode } from "react";
+import { useState, useEffect, createContext, ReactNode } from "react";
 import { firebase, auth, database } from "../services/firebase";
+import { api as githubApi } from "../services/github";
 
 type User = {
   uid: string;
@@ -13,6 +14,13 @@ type User = {
   company?: string;
   location?: string;
 };
+
+type GithubApiInfo = {
+  limit: number;
+  remaining: number;
+  reset: number;
+  used: number;
+}
 
 type FirebaseResultProfile = {
   avatar_url: string;
@@ -51,7 +59,9 @@ type FirebaseResultProfile = {
 
 type AuthContextType = {
   user: User | undefined;
+  githubApiInfo: GithubApiInfo | undefined;
   signWithGithub: () => Promise<void>;
+  getGithubRequestsInfo: () => Promise<void>;
 };
 
 type AuthContextProviderProps = {
@@ -66,6 +76,15 @@ const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<User>();
+  const [githubApiInfo, setGithubApiInfo] = useState<GithubApiInfo>();
+
+  useEffect(() => {
+    async function githubApiInfo() {
+      await getGithubRequestsInfo();
+    }
+
+    githubApiInfo();
+  }, []);
 
   async function signWithGithub() {
     const provider = new firebase.auth.GithubAuthProvider();
@@ -120,11 +139,36 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  async function getGithubRequestsInfo() {
+    const token = sessionStorage.getItem('access_token');
+
+    const response = await githubApi.get("rate_limit", {
+      headers: {
+        Authorization: `${token ? `token ${token}` : ''}`,
+      },
+    });
+
+    if(!response?.data?.rate) {
+      return;
+    }
+    
+    const { limit, remaining, reset, used }: GithubApiInfo = response?.data?.rate;
+
+    setGithubApiInfo({
+      limit, 
+      remaining, 
+      reset, 
+      used
+    });
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        githubApiInfo,
         signWithGithub,
+        getGithubRequestsInfo,
       }}
     >
       {children}
