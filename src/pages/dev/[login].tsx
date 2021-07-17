@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail } from 'react-icons/fi';
 import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
+import { useAuth } from "../../hooks/useAuth";
 
 import { Header } from '../../components/Header';
 import { DevsList } from '../../components/DevsList';
@@ -41,6 +42,12 @@ export default function Dev() {
   const { login }: DevQueryParams = router.query;
   const [dev, setDev] = useState<Dev>({});
   const [following, setFollowing] = useState<Following[]>([]);
+
+  const { getGithubRequestsInfo } = useAuth();
+
+  useEffect(() => {
+    getGithubRequestsInfo();
+  }, [dev]);
 
   useEffect(() => {
     if (!login) {
