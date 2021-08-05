@@ -58,6 +58,7 @@ type FirebaseResultProfile = {
 };
 
 type AuthContextType = {
+  isLoading: boolean;
   user: User | undefined;
   githubApiInfo: GithubApiInfo | undefined;
   signWithGithub: () => Promise<void>;
@@ -75,6 +76,7 @@ type CredentialGithub = firebase.auth.AuthCredential & {
 const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProviderProps) {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User>();
   const [githubApiInfo, setGithubApiInfo] = useState<GithubApiInfo>();
 
@@ -84,6 +86,33 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     }
 
     githubApiInfo();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const getAuthenticatedUserData = auth.onAuthStateChanged( async (user) => {
+      const { uid } = user;
+
+      const userRef = await database.ref(`users`).get();
+      const firebaseUsers: User[] = userRef.val();
+
+      const userProps = Object.entries(firebaseUsers).map(([key, values]) => {
+        return {
+          key: key,
+          ...values
+        }
+      });
+
+      const authenticatedUser = userProps.find((user) => user.uid === uid);
+
+      setUser(authenticatedUser);
+    });
+
+    return () => {
+      getAuthenticatedUserData();
+      setIsLoading(false);
+    };
   }, []);
 
   async function signWithGithub() {
@@ -165,6 +194,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   return (
     <AuthContext.Provider
       value={{
+        isLoading,
         user,
         githubApiInfo,
         signWithGithub,
