@@ -62,7 +62,6 @@ type AuthContextType = {
   user: User | undefined;
   githubApiInfo: GithubApiInfo | undefined;
   signWithGithub: () => Promise<void>;
-  getGithubRequestsInfo: () => Promise<void>;
 };
 
 type AuthContextProviderProps = {
@@ -81,38 +80,15 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   const [githubApiInfo, setGithubApiInfo] = useState<GithubApiInfo>();
 
   useEffect(() => {
-    async function githubApiInfo() {
-      await getGithubRequestsInfo();
-    }
-
-    githubApiInfo();
-  }, []);
-
-  useEffect(() => {
     setIsLoading(true);
 
-    const getAuthenticatedUserData = auth.onAuthStateChanged( async (user) => {
-      const { uid } = user;
-
-      const userRef = await database.ref(`users`).get();
-      const firebaseUsers: User[] = userRef.val();
-
-      const userProps = Object.entries(firebaseUsers).map(([key, values]) => {
-        return {
-          key: key,
-          ...values
-        }
-      });
-
-      const authenticatedUser = userProps.find((user) => user.uid === uid);
-
-      setUser(authenticatedUser);
-    });
-
-    return () => {
-      getAuthenticatedUserData();
+    async function loadUserAndRequestsInfo() {
+      await getGithubRequestsInfo();
+      await getAuthenticatedUserData();
       setIsLoading(false);
-    };
+    }
+
+    loadUserAndRequestsInfo();
   }, []);
 
   async function signWithGithub() {
@@ -191,6 +167,34 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     });
   }
 
+  async function getAuthenticatedUserData() {
+    auth.onAuthStateChanged( async (user) => {
+      if(!user) {
+        return;
+      }
+
+      const { uid } = user;
+
+      const userRef = await database.ref(`users`).get();
+      const firebaseUsers: User[] = userRef.val();
+
+      if(!firebaseUsers) {
+        return;
+      }
+
+      const userProps = Object.entries(firebaseUsers).map(([key, values]) => {
+        return {
+          key: key,
+          ...values
+        }
+      });
+
+      const authenticatedUser = userProps.find((user) => user.uid === uid);
+
+      setUser(authenticatedUser);
+    });
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -198,7 +202,6 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
         user,
         githubApiInfo,
         signWithGithub,
-        getGithubRequestsInfo,
       }}
     >
       {children}
