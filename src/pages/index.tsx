@@ -11,7 +11,7 @@ import { HomeStyled } from '../styles/Home';
 
 export default function Home() {
   const router = useRouter();
-  const { user, signWithGithub } = useAuth();
+  const { signWithGithub } = useAuth();
 
   async function handleSignWithGithub() {
     try {
