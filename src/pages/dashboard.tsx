@@ -1,6 +1,8 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
+
 import { useState, useEffect, FormEvent } from "react";
+import toast from "react-hot-toast";
 
 import { api as githubAPI } from "../services/github";
 
@@ -29,7 +31,7 @@ import { database } from "../services/firebase";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Home({ usersIds }: dashboardProps) {
-  const { user, getGithubRequestsInfo } = useAuth();
+  const { user, githubApiInfo, getGithubRequestsInfo } = useAuth();
   const [devs, setDevs] = useState<User[]>([]);
 
   /* FORM */
@@ -45,6 +47,22 @@ export default function Home({ usersIds }: dashboardProps) {
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
+
+    if(githubApiInfo.remaining < 15) {
+      toast.error("it takes at least fifteen nodes", {
+        style: {
+          background: "#F56565",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#F56565"
+        }
+      });
+
+      return;
+    }
 
     function shuffleArray(arr) {
       // Loop em todos os elementos
