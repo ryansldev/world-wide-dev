@@ -14,6 +14,7 @@ export const StyledHeader = styled.header`
     height: 100%;
     max-width: 90vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
