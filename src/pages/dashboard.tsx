@@ -121,10 +121,23 @@ export default function Home({ usersIds }: dashboardProps) {
         });
 
         function filterFollowedDevsOfTheFollowedDevs(dev) {
-          return dev.login !== user.login;
+          const listOfFollowedDevs = [];
+          followingDevs.map((followedDev) => {
+            if(followedDev.login === dev.login) {
+              listOfFollowedDevs.push(followedDev.login);
+            }
+          });
+
+          console.log(listOfFollowedDevs, listOfFollowedDevs.includes(dev.login));
+
+          if(listOfFollowedDevs.includes(dev.login)) {
+            return false;
+          } else {
+            return dev.login !== user.login;
+          }
         }
 
-        var filteredFollowedDevsOfTheFollowedDevs = data.filter((dev) => filterFollowedDevsOfTheFollowedDevs(dev));
+        const filteredFollowedDevsOfTheFollowedDevs = data.filter((dev) => filterFollowedDevsOfTheFollowedDevs(dev));
         const followedDevsOfTheFollowedDevs = filteredFollowedDevsOfTheFollowedDevs.reduce((unico, item) => {
           return unico.includes(item) ? unico : [...unico, item];
         }, []);
@@ -147,8 +160,8 @@ export default function Home({ usersIds }: dashboardProps) {
       return;
     });
 
-    const filteredFollowedDevsOfTheFollowedDevs = followedDevsOfTheFollowedDevs.filter(function(el, i) {
-      return followedDevsOfTheFollowedDevs.indexOf(el) === i;
+    const filteredFollowedDevsOfTheFollowedDevs = followedDevsOfTheFollowedDevs.filter((dev, i) => {
+      return followedDevsOfTheFollowedDevs.indexOf(dev) === i;
     });
 
     const parsedRecommendedDevsList = await filteredFollowedDevsOfTheFollowedDevs.map((dev) => {
