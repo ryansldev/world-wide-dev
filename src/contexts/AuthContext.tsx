@@ -92,6 +92,17 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     loadUserAndRequestsInfo();
   }, []);
 
+  function verifyUserAuthentication() {
+    const token = sessionStorage.getItem('access_token');
+
+    if(!token) {
+      setUser(undefined);
+      return false;
+    }
+
+    return true;
+  }
+
   async function signWithGithub() {
     const provider = new firebase.auth.GithubAuthProvider();
 
@@ -169,6 +180,10 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   }
 
   async function getAuthenticatedUserData() {
+    if(!verifyUserAuthentication()) {
+      return
+    }
+
     auth.onAuthStateChanged( async (user) => {
       if(!user) {
         return;
