@@ -14,38 +14,10 @@ export default function Home() {
   const { user, signWithGithub } = useAuth();
 
   async function handleSignWithGithub() {
-    if(!user) {
-      signWithGithub()
-      .then(() => {
-        toast.success("Welcome to W.W.D :)", {
-          style: {
-            background: "#00c972",
-            color: "#FFF",
-            fontFamily: "Poppins, sans-serif"
-          },
-          iconTheme: {
-            primary: "#FFF",
-            secondary: "#00c972"
-          }
-        });
+    try {
+      await signWithGithub();
 
-        router.push('/dashboard');
-      })
-      .catch((error) => {
-        toast.error(`${error}`, {
-          style: {
-            background: "#F56565",
-            color: "#FFF",
-            fontFamily: "Poppins, sans-serif"
-          },
-          iconTheme: {
-            primary: "#FFF",
-            secondary: "#F56565"
-          }
-        });
-      });
-    } else {
-      toast.success("You already logged in!", {
+      toast.success("Welcome to W.W.D :)", {
         style: {
           background: "#00c972",
           color: "#FFF",
@@ -56,7 +28,20 @@ export default function Home() {
           secondary: "#00c972"
         }
       });
+
       router.push('/dashboard');
+    } catch (error){
+      toast.error(`${error}`, {
+        style: {
+          background: "#F56565",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#F56565"
+        }
+      });
     }
   }
 
