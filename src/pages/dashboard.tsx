@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 import { api as githubAPI } from "../services/github";
 
@@ -38,6 +38,10 @@ export default function Home({ usersIds }: dashboardProps) {
   const [language, setLanguage] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [recommendedDevs, setRecommendedDevs] = useState([]);
+
+  useEffect(() => {
+    getGithubRequestsInfo();
+  }, [])
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
