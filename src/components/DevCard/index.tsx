@@ -33,18 +33,18 @@ export function DevCard({
 
       <Content>
         <b>Biografia</b>
-        <p>{bio}</p>
+        <p>{bio ? bio : 'This user does not have a biography on his github profile.'}</p>
       </Content>
 
       <Footer>
         <div>
           <FiMapPin size={18} />
-          <span>{location}</span>
+          <span>{location ? location : 'Não informado'}</span>
         </div>
         <div>
           <FiLink size={24} />
           <a href={blog} rel="noopener noreferrer" target="_blank">
-            {blog}
+            {blog ? blog : 'Não informado'}
           </a>
         </div>
       </Footer>

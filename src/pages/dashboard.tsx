@@ -8,6 +8,7 @@ import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
 import { FilterInput } from '../components/FilterInput';
 import { MinifiedDevCard } from "../components/MinifiedDevCard";
+import { DevCard } from "../components/DevCard";
 import { SearchForm } from "../components/SearchForm";
 
 import { Main } from "../styles/pages/Dashboard";
@@ -25,8 +26,10 @@ type dashboardProps = {
 }
 
 import { database } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Home({ usersIds }: dashboardProps) {
+  const { user } = useAuth();
   const [devs, setDevs] = useState<User[]>([]);
 
   /* FORM */
@@ -34,6 +37,118 @@ export default function Home({ usersIds }: dashboardProps) {
   const [location, setLocation] = useState('');
   const [language, setLanguage] = useState('');
   const [showFilter, setShowFilter] = useState(false);
+  const [recommendedDevs, setRecommendedDevs] = useState([]);
+
+  async function handleSearchRecommendedUsers(event: FormEvent) {
+    event.preventDefault();
+
+    function shuffleArray(arr) {
+      // Loop em todos os elementos
+      for (let i = arr.length - 1; i > 0; i--) {
+              // Escolhendo elemento aleatório
+          const j = Math.floor(Math.random() * (i + 1));
+          // Reposicionando elemento
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      // Retornando array com aleatoriedade
+      return arr;
+    }
+
+    const token = sessionStorage.getItem('access_token');
+    const { data: followingDevs } = await githubAPI.get(`/users/${user.login}/following`, {
+      headers: {
+        Authorization: `${token ? `token ${token}` : ''}`,
+      },
+    });
+
+    async function filterFollowingDevs(dev) {
+      if(dev) {
+        const { data } = await githubAPI.get(`/users/${dev.login}/following`, {
+          headers: {
+            Authorization: `${token ? `token ${token}` : ''}`,
+          },
+        });
+
+        if(data.length >= 10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
+    const filteredFollowingDevs = followingDevs.filter((dev) => filterFollowingDevs(dev));
+
+    const shuffleredFollowingDevs = shuffleArray(filteredFollowingDevs);
+    const followedDevs = [
+      shuffleredFollowingDevs[0],
+      shuffleredFollowingDevs[1],
+      shuffleredFollowingDevs[2],
+      shuffleredFollowingDevs[3],
+      shuffleredFollowingDevs[4]
+    ];
+
+    const parsedFollowedDevsOfTheFollowedDevs = await Promise.all(
+      followedDevs.map(async (dev) => {
+        const { data } = await githubAPI.get(`/users/${dev.login}/following`, {
+          headers: {
+            Authorization: `${token ? `token ${token}` : ''}`,
+          },
+        });
+
+        function filterFollowedDevsOfTheFollowedDevs(dev) {
+          return dev.login !== user.login;
+        }
+
+        var filteredFollowedDevsOfTheFollowedDevs = data.filter((dev) => filterFollowedDevsOfTheFollowedDevs(dev));
+        const followedDevsOfTheFollowedDevs = filteredFollowedDevsOfTheFollowedDevs.reduce((unico, item) => {
+          return unico.includes(item) ? unico : [...unico, item];
+        }, []);
+
+        if(followedDevsOfTheFollowedDevs.length >= 3) {
+          const shuffleData = shuffleArray(followedDevsOfTheFollowedDevs);
+          return [shuffleData[0], shuffleData[1], shuffleData[2]];
+        }
+
+        return followedDevsOfTheFollowedDevs;
+      })
+    );
+
+    const followedDevsOfTheFollowedDevs = [];
+    await parsedFollowedDevsOfTheFollowedDevs.map((element) => {
+      element.map((dev) => {
+        followedDevsOfTheFollowedDevs.push(dev);
+      })
+
+      return;
+    });
+
+    const filteredFollowedDevsOfTheFollowedDevs = followedDevsOfTheFollowedDevs.filter(function(el, i) {
+      return followedDevsOfTheFollowedDevs.indexOf(el) === i;
+    });
+
+    const parsedRecommendedDevsList = await filteredFollowedDevsOfTheFollowedDevs.map((dev) => {
+      return dev;
+    });
+
+    const getFullInfoProfile = async (dev: any) => {
+      const { data } = await githubAPI.get(`/users/${dev.login}`, {
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        },
+      });
+
+      return data;
+    }
+
+    const listOfRecommendedDevs = await Promise.all(
+      parsedRecommendedDevsList.map(async (dev) => await getFullInfoProfile(dev))
+    );
+
+    setRecommendedDevs(listOfRecommendedDevs);
+  }
 
   async function handleSearchUser(event: FormEvent) {
     event.preventDefault();
@@ -143,6 +258,23 @@ export default function Home({ usersIds }: dashboardProps) {
             );
           })}
         </section>
+        <section className="recommended-devs-section">
+          {recommendedDevs && recommendedDevs !== [] && recommendedDevs.map((dev, key) => {
+            return (
+              <DevCard
+                key={key}
+                login={dev?.login}
+                avatar_url={dev?.avatar_url}
+                html_url={dev?.html_url}
+                blog={dev?.blog}
+                name={dev?.name}
+                location={dev?.location}
+                // registered={dev.registered}
+              />
+            )
+          })};
+        </section>
+        { user && <button type="button" onClick={handleSearchRecommendedUsers}>Pesquisa recomendada</button> }
       </Main>
     </>
   );
