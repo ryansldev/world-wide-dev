@@ -175,6 +175,10 @@ export default function Home({ usersIds }: dashboardProps) {
         },
       });
 
+      if(data.blog && !data.blog.includes('https://')) {
+        data.blog = (`https://${data.blog}`);
+      };
+
       return data;
     }
 
