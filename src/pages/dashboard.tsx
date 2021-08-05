@@ -175,7 +175,7 @@ export default function Home({ usersIds }: dashboardProps) {
         },
       });
 
-      if(data.blog && !data.blog.includes('https://')) {
+      if(data.blog && !data.blog.includes('://')) {
         data.blog = (`https://${data.blog}`);
       };
 
