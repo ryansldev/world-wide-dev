@@ -29,7 +29,7 @@ import { database } from "../services/firebase";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Home({ usersIds }: dashboardProps) {
-  const { user } = useAuth();
+  const { user, getGithubRequestsInfo } = useAuth();
   const [devs, setDevs] = useState<User[]>([]);
 
   /* FORM */
@@ -148,6 +148,7 @@ export default function Home({ usersIds }: dashboardProps) {
     );
 
     setRecommendedDevs(listOfRecommendedDevs);
+    getGithubRequestsInfo();
   }
 
   async function handleSearchUser(event: FormEvent) {
@@ -272,7 +273,7 @@ export default function Home({ usersIds }: dashboardProps) {
                 // registered={dev.registered}
               />
             )
-          })};
+          })}
         </section>
         { user && <button type="button" onClick={handleSearchRecommendedUsers}>Pesquisa recomendada</button> }
       </Main>

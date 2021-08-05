@@ -62,6 +62,7 @@ type AuthContextType = {
   user: User | undefined;
   githubApiInfo: GithubApiInfo | undefined;
   signWithGithub: () => Promise<void>;
+  getGithubRequestsInfo: () => Promise<void>;
 };
 
 type AuthContextProviderProps = {
@@ -202,6 +203,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
         user,
         githubApiInfo,
         signWithGithub,
+        getGithubRequestsInfo,
       }}
     >
       {children}
