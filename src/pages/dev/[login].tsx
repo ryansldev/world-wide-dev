@@ -61,7 +61,7 @@ export default function Dev() {
           Authorization: `${token ? `token ${token}` : ''}`,
         }
       });
-      if(devData.blog && !devData.blog.includes('https://')) {
+      if(devData.blog && !devData.blog.includes('://')) {
         devData.blog = (`https://${devData.blog}`);
       };
       const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
