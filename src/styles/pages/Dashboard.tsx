@@ -24,7 +24,7 @@ export const Main = styled.main`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16.125rem, auto));
     justify-content: center;
-    gap: 1.5rem 0;
+    gap: 1.5rem 1.5rem;
   }
 
   > button {

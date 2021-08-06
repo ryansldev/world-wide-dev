@@ -35,6 +35,7 @@ export default function Home({ usersIds }: dashboardProps) {
   const { user, githubApiInfo, getGithubRequestsInfo } = useAuth();
   const [devs, setDevs] = useState<User[]>([]);
   const [isLoadingDevs, setIsLoadingDevs] = useState(false);
+  const [isLoadingRecommendedDevs, setIsLoadingRecommendedDevs] = useState(false);
 
   /* FORM */
   const [username, setUsername] = useState('');
@@ -49,7 +50,7 @@ export default function Home({ usersIds }: dashboardProps) {
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
-    setIsLoadingDevs(true);
+    setIsLoadingRecommendedDevs(true);
 
     if(githubApiInfo.remaining < 15) {
       toast.error("it takes at least fifteen nodes", {
@@ -191,11 +192,12 @@ export default function Home({ usersIds }: dashboardProps) {
 
     setRecommendedDevs(listOfRecommendedDevs);
     getGithubRequestsInfo();
-    setIsLoadingDevs(false);
+    setIsLoadingRecommendedDevs(false);
   }
 
   async function handleSearchUser(event: FormEvent) {
     event.preventDefault();
+    setIsLoadingDevs(true);
 
     var query: string = '';
     const token = sessionStorage.getItem('access_token');
@@ -241,6 +243,7 @@ export default function Home({ usersIds }: dashboardProps) {
     });
 
     setDevs(users);
+    setIsLoadingDevs(false);
   }
 
   function handleShowFilter() {
@@ -301,6 +304,17 @@ export default function Home({ usersIds }: dashboardProps) {
               />
             );
           })}
+
+          {
+            isLoadingDevs && (
+              <>
+                <Skeleton width={258} height={214} />
+                <Skeleton width={258} height={214} />
+                <Skeleton width={258} height={214} />
+                <Skeleton width={258} height={214} />
+              </>
+            )
+          }
         </section>
         <section className="recommended-devs-section">
           {recommendedDevs && recommendedDevs !== [] && recommendedDevs.map((dev, key) => {
@@ -319,7 +333,7 @@ export default function Home({ usersIds }: dashboardProps) {
           })}
 
           {
-            isLoadingDevs && (
+            isLoadingRecommendedDevs && (
               <>
                 <Skeleton width={300} height={368} />
                 <Skeleton width={300} height={368} />
