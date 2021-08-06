@@ -13,6 +13,7 @@ export const Card = styled.article`
 
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 
   > img {
     width: 4.5rem;

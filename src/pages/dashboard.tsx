@@ -85,6 +85,9 @@ export default function Home({ usersIds }: dashboardProps) {
       headers: {
         Authorization: `${token ? `token ${token}` : ''}`,
       },
+      params: {
+        per_page: 100,
+      }
     });
 
     async function filterFollowingDevs(dev) {
