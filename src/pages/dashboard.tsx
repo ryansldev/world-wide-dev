@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import { useState, useEffect, FormEvent } from "react";
 import toast from "react-hot-toast";
+import Skeleton from "react-loading-skeleton";
 
 import { api as githubAPI } from "../services/github";
 
@@ -33,6 +34,7 @@ import { useAuth } from "../hooks/useAuth";
 export default function Home({ usersIds }: dashboardProps) {
   const { user, githubApiInfo, getGithubRequestsInfo } = useAuth();
   const [devs, setDevs] = useState<User[]>([]);
+  const [isLoadingDevs, setIsLoadingDevs] = useState(false);
 
   /* FORM */
   const [username, setUsername] = useState('');
@@ -47,6 +49,7 @@ export default function Home({ usersIds }: dashboardProps) {
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
+    setIsLoadingDevs(true);
 
     if(githubApiInfo.remaining < 15) {
       toast.error("it takes at least fifteen nodes", {
@@ -188,6 +191,7 @@ export default function Home({ usersIds }: dashboardProps) {
 
     setRecommendedDevs(listOfRecommendedDevs);
     getGithubRequestsInfo();
+    setIsLoadingDevs(false);
   }
 
   async function handleSearchUser(event: FormEvent) {
@@ -313,6 +317,16 @@ export default function Home({ usersIds }: dashboardProps) {
               />
             )
           })}
+
+          {
+            isLoadingDevs && (
+              <>
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+              </>
+            )
+          }
         </section>
         { user && <button type="button" onClick={handleSearchRecommendedUsers}>Pesquisa recomendada</button> }
       </Main>
