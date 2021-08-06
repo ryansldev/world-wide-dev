@@ -81,13 +81,10 @@ export default function Home({ usersIds }: dashboardProps) {
     }
 
     const token = sessionStorage.getItem('access_token');
-    const { data: followingDevs } = await githubAPI.get(`/users/${user.login}/following`, {
+    const { data: followingDevs } = await githubAPI.get(`/users/${user.login}/following?per_page=100`, {
       headers: {
         Authorization: `${token ? `token ${token}` : ''}`,
       },
-      params: {
-        per_page: 100,
-      }
     });
 
     async function filterFollowingDevs(dev) {
@@ -121,7 +118,7 @@ export default function Home({ usersIds }: dashboardProps) {
 
     const parsedFollowedDevsOfTheFollowedDevs = await Promise.all(
       followedDevs.map(async (dev) => {
-        const { data } = await githubAPI.get(`/users/${dev.login}/following`, {
+        const { data } = await githubAPI.get(`/users/${dev.login}/following&per_page=100`, {
           headers: {
             Authorization: `${token ? `token ${token}` : ''}`,
           },
@@ -134,8 +131,6 @@ export default function Home({ usersIds }: dashboardProps) {
               listOfFollowedDevs.push(followedDev.login);
             }
           });
-
-          console.log(listOfFollowedDevs, listOfFollowedDevs.includes(dev.login));
 
           if(listOfFollowedDevs.includes(dev.login)) {
             return false;

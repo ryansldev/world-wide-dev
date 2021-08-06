@@ -37,6 +37,7 @@ export const Head = styled.header`
   }
 
   a {
+    z-index: 9999;
     color: ${(props) => props.theme.colors.subtitle};
     transition: color 0.3s;
     font-size: 0.875rem;

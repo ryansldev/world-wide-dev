@@ -42,8 +42,9 @@ export default function Dev() {
   const { login }: DevQueryParams = router.query;
   const [dev, setDev] = useState<Dev>({});
   const [following, setFollowing] = useState<Following[]>([]);
+  const [isFollowed, setIsFollowed] = useState(false);
 
-  const { getGithubRequestsInfo } = useAuth();
+  const { user, getGithubRequestsInfo } = useAuth();
 
   useEffect(() => {
     getGithubRequestsInfo();
@@ -67,10 +68,80 @@ export default function Dev() {
       const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
       setDev(devData);
       setFollowing(followingData);
+
+      async function paginateFollowedDevs() {
+        const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
+          headers: {
+            Authorization: `${token ? `token ${token}` : ''}`
+          },
+        });
+
+        if(data.length !== 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if(token.length !== 0 && user) {
+        var count = 0;
+        const listOfFollowedDevs = [];
+        var isFollowedDev = false;
+
+        while(await paginateFollowedDevs() === true) {
+          const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
+            headers: {
+              Authorization: `${token ? `token ${token}` : ''}`,
+            },
+          });
+
+          listOfFollowedDevs.push(data);
+          count++;
+        };
+
+        listOfFollowedDevs.map((element) => {
+          if(isFollowedDev === false) {
+            element.map((dev) => {
+              if(dev.login === login) {
+                isFollowedDev = true;
+              };
+            });
+          };
+        });
+
+        setIsFollowed(isFollowedDev);
+      }
     }
 
     devData();
-  }, [login]);
+  }, [login, user]);
+
+  async function handleFollowDev(event) {
+    event.preventDefault();
+
+    const token = sessionStorage.getItem('access_token');
+    if(!isFollowed) {
+      await githubAPI({
+        method: 'PUT',
+        url: `/user/following/${dev.login}`,
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        },
+      });
+
+      setIsFollowed(true);
+    } else {
+      await githubAPI({
+        method: 'DELETE',
+        url: `/user/following/${dev.login}`,
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        },
+      });
+
+      setIsFollowed(false);
+    }
+  }
 
   return (
     <>
@@ -128,6 +199,12 @@ export default function Dev() {
                   @{dev.twitter_username}
                 </a>
               </div>
+            }
+
+            { user &&
+              <button type="button" onClick={handleFollowDev}>
+                { !isFollowed ? `Follow @${dev.login}` : `Unfollow @${dev.login}` }
+              </button>
             }
           </div>
 

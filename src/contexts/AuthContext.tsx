@@ -105,6 +105,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
 
   async function signWithGithub() {
     const provider = new firebase.auth.GithubAuthProvider();
+    provider.addScope('user:follow');
 
     const result = await auth.signInWithPopup(provider);
     const { accessToken } = result.credential as CredentialGithub;
@@ -168,13 +169,13 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     if(!response?.data?.rate) {
       return;
     }
-    
+
     const { limit, remaining, reset, used }: GithubApiInfo = response?.data?.rate;
 
     setGithubApiInfo({
-      limit, 
-      remaining, 
-      reset, 
+      limit,
+      remaining,
+      reset,
       used
     });
   }
