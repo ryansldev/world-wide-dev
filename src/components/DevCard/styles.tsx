@@ -55,7 +55,7 @@ export const Content = styled.div`
   text-align: center;
 
   > b {
-    color: ${(props) => props.theme.colors.primary300};
+    color: ${(props) => props.theme.colors.primary};
   }
 
   > p {
@@ -85,7 +85,7 @@ export const Footer = styled.footer`
     }
 
     &:last-child {
-      color: ${(props) => props.theme.colors.primary300};
+      color: ${(props) => props.theme.colors.primary400};
       transition: filter 0.2s;
     }
   }
