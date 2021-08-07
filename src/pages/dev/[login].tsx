@@ -209,7 +209,7 @@ export default function Dev() {
           </div>
 
           <DevsList devs={following}>
-            {following !== [] ? <Title>Who does <strong>{dev.name ? dev.name : dev.login}</strong> follow?</Title> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
+            {following.length !== 0 ? <Title>Who does <strong>{dev.name ? dev.name : dev.login}</strong> follow?</Title> : <span><strong>{dev.name}</strong> ainda não segue ninguém</span>}
           </DevsList>
         </div>
       </Main>
