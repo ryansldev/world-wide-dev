@@ -297,7 +297,7 @@ export default function Home({ usersIds }: dashboardProps) {
               placeholder="ex: Brazil"
               onChange={(event) => setLocation(event.target.value)}
               value={location}
-              labelTitle={'localização'}
+              labelTitle={'location'}
             />
             <FilterInput
               type="text"
@@ -307,10 +307,10 @@ export default function Home({ usersIds }: dashboardProps) {
               placeholder="ex: JavaScript(Devs que utilizam majoritariamente)"
               onChange={(event) => setLanguage(event.target.value)}
               value={language}
-              labelTitle={'linguagem'}
+              labelTitle={'language'}
             />
             <button type="submit">
-              Filtrar pesquisa
+              Filter Search
             </button>
           </div>
         </SearchForm>
@@ -365,7 +365,7 @@ export default function Home({ usersIds }: dashboardProps) {
             )
           }
         </section>
-        { user && <button type="button" onClick={handleSearchRecommendedUsers}>Pesquisa recomendada</button> }
+        { user && <button type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</button> }
       </Main>
     </>
   );
