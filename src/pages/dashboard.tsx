@@ -81,11 +81,34 @@ export default function Home({ usersIds }: dashboardProps) {
     }
 
     const token = sessionStorage.getItem('access_token');
-    const { data: followingDevs } = await githubAPI.get(`/users/${user.login}/following?per_page=100`, {
-      headers: {
-        Authorization: `${token ? `token ${token}` : ''}`,
-      },
-    });
+    var count = 0;
+    async function paginateFollowedDevs() {
+      const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`
+        },
+      });
+
+      if(data.length !== 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const followingDevs = [];
+    if(token !== '' && user) {
+      while(await paginateFollowedDevs() === true) {
+        const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
+          headers: {
+            Authorization: `${token ? `token ${token}` : ''}`,
+          },
+        });
+
+        followingDevs.push(data);
+        count++;
+      };
+    }
 
     async function filterFollowingDevs(dev) {
       if(dev) {
@@ -105,7 +128,7 @@ export default function Home({ usersIds }: dashboardProps) {
       }
     }
 
-    const filteredFollowingDevs = followingDevs.filter((dev) => filterFollowingDevs(dev));
+    const filteredFollowingDevs = followingDevs[0].filter((dev) => filterFollowingDevs(dev));
 
     const shuffleredFollowingDevs = shuffleArray(filteredFollowingDevs);
     const followedDevs = [
@@ -118,7 +141,7 @@ export default function Home({ usersIds }: dashboardProps) {
 
     const parsedFollowedDevsOfTheFollowedDevs = await Promise.all(
       followedDevs.map(async (dev) => {
-        const { data } = await githubAPI.get(`/users/${dev.login}/following&per_page=100`, {
+        const { data } = await githubAPI.get(`/users/${dev.login}/following`, {
           headers: {
             Authorization: `${token ? `token ${token}` : ''}`,
           },
@@ -126,10 +149,12 @@ export default function Home({ usersIds }: dashboardProps) {
 
         function filterFollowedDevsOfTheFollowedDevs(dev) {
           const listOfFollowedDevs = [];
-          followingDevs.map((followedDev) => {
-            if(followedDev.login === dev.login) {
-              listOfFollowedDevs.push(followedDev.login);
-            }
+          followingDevs.map((element) => {
+            element.map((followedDev) => {
+              if(dev && followedDev.login === dev.login) {
+                listOfFollowedDevs.push(followedDev.login);
+              };
+            });
           });
 
           if(listOfFollowedDevs.includes(dev.login)) {

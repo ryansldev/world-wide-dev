@@ -83,7 +83,7 @@ export default function Dev() {
         }
       }
 
-      if(token.length !== 0 && user) {
+      if(token !== '' && user) {
         var count = 0;
         const listOfFollowedDevs = [];
         var isFollowedDev = false;
@@ -102,7 +102,7 @@ export default function Dev() {
         listOfFollowedDevs.map((element) => {
           if(isFollowedDev === false) {
             element.map((dev) => {
-              if(dev.login === login) {
+              if(dev && dev.login === login) {
                 isFollowedDev = true;
               };
             });
