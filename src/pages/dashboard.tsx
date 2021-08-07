@@ -52,6 +52,7 @@ export default function Home({ usersIds }: dashboardProps) {
     event.preventDefault();
     document.body.scrollTop = 350; // For Safari
     document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
+    setRecommendedDevs([]);
     setIsLoadingRecommendedDevs(true);
 
     if(githubApiInfo.remaining < 15) {

@@ -30,6 +30,7 @@ export const Main = styled.main`
   > h2 {
     font: ${(props) => props.theme.fonts.heading500};
     color: ${(props) => props.theme.colors.subtitle};
+    margin-top: 2rem;
   }
 
   > button {
