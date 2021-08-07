@@ -345,6 +345,7 @@ export default function Home({ usersIds }: dashboardProps) {
               <DevCard
                 key={key}
                 login={dev?.login}
+                bio={dev?.bio}
                 avatar_url={dev?.avatar_url}
                 html_url={dev?.html_url}
                 blog={dev?.blog}
