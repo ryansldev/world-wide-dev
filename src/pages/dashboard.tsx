@@ -365,6 +365,12 @@ export default function Home({ usersIds }: dashboardProps) {
                 <Skeleton width={300} height={368} />
                 <Skeleton width={300} height={368} />
                 <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
+                <Skeleton width={300} height={368} />
               </>
             )
           }
