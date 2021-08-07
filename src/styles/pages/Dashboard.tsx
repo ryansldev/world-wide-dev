@@ -27,12 +27,17 @@ export const Main = styled.main`
     gap: 1.5rem 1.5rem;
   }
 
+  > h2 {
+    font: ${(props) => props.theme.fonts.heading500};
+    color: ${(props) => props.theme.colors.subtitle};
+  }
+
   > button {
     width: 18.75rem;
     background: transparent;
     border: 2px solid ${(props) => props.theme.colors.primary};
     outline: 0;
-    margin: 3rem 0;
+    margin: 2rem 0;
     padding: 1.5rem 2rem;
     color: ${(props) => props.theme.colors.primary};
     font: ${(props) => props.theme.fonts.heading400};
@@ -48,8 +53,8 @@ export const Main = styled.main`
 
   > .recommended-devs-section {
     display: flex;
-    gap: 5rem 2rem;
     flex-wrap: wrap;
+    gap: 5rem 2rem;
   }
 
   @media (max-width: 572px) {

@@ -50,6 +50,8 @@ export default function Home({ usersIds }: dashboardProps) {
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
+    document.body.scrollTop = 350; // For Safari
+    document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
     setIsLoadingRecommendedDevs(true);
 
     if(githubApiInfo.remaining < 15) {
@@ -366,6 +368,7 @@ export default function Home({ usersIds }: dashboardProps) {
             )
           }
         </section>
+        { recommendedDevs.length === 0 && <h2>Make your recommended search of devs!</h2> }
         { user && <button type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</button> }
       </Main>
     </>

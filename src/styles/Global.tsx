@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   html {
     background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.heading};
+    scroll-behavior: smooth;
   };
 
   body {
@@ -18,11 +19,11 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     ::-webkit-scrollbar-track {
-      background: ${props => props.theme.colors.background}; 
+      background: ${props => props.theme.colors.background};
     }
-    
+
     ::-webkit-scrollbar-thumb {
-      background: ${props => props.theme.colors.primary}; 
+      background: ${props => props.theme.colors.primary};
     }
   }
 

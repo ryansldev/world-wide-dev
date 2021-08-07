@@ -61,6 +61,15 @@ export const Content = styled.div`
   > p {
     margin-top: 0.5rem;
     font-size: 0.875rem;
+    overflow:hidden;
+    line-height: 1.5rem;
+    max-height: 4.5rem;
+    -webkit-box-orient: vertical;
+    display: block;
+    display: -webkit-box;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
   }
 `;
 
