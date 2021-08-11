@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useAuth } from "../hooks/useAuth";
@@ -11,7 +12,13 @@ import { HomeStyled } from '../styles/Home';
 
 export default function Home() {
   const router = useRouter();
-  const { signWithGithub } = useAuth();
+  const { signWithGithub, user } = useAuth();
+
+  useEffect(() => {
+    if(user) {
+      router.push('/dashboard');
+    };
+  }, [router, user]);
 
   async function handleSignWithGithub() {
     try {

@@ -46,7 +46,16 @@ export default function Home({ usersIds }: dashboardProps) {
 
   useEffect(() => {
     getGithubRequestsInfo();
-  }, [])
+  }, [getGithubRequestsInfo]);
+
+  useEffect(() => {
+    var recommendedDevsList = [];
+    if(localStorage.hasOwnProperty("WWD_RECOMMENDED_DEVS") && localStorage.getItem("WWD_RECOMMENDED_DEVS") !== '') {
+      recommendedDevsList = JSON.parse(localStorage.getItem("WWD_RECOMMENDED_DEVS"));
+    }
+
+    setRecommendedDevs(recommendedDevsList);
+  }, []);
 
   async function handleSearchRecommendedUsers(event: FormEvent) {
     event.preventDefault();
@@ -215,6 +224,9 @@ export default function Home({ usersIds }: dashboardProps) {
     const listOfRecommendedDevs = await Promise.all(
       parsedRecommendedDevsList.map(async (dev) => await getFullInfoProfile(dev))
     );
+
+    const listOfRecommendedDevsInJSON = JSON.stringify(listOfRecommendedDevs);
+    localStorage.setItem('WWD_RECOMMENDED_DEVS', listOfRecommendedDevsInJSON)
 
     setRecommendedDevs(listOfRecommendedDevs);
     getGithubRequestsInfo();

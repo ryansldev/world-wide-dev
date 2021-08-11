@@ -10,7 +10,7 @@ import { DevsList } from '../../components/DevsList';
 
 import { api as githubAPI } from '../../services/github';
 
-import { Main, Title } from '../../styles/pages/Dev';
+import { Main, Title, FollowButton } from '../../styles/pages/Dev';
 
 type DevQueryParams = {
   login?: string,
@@ -183,7 +183,7 @@ export default function Dev() {
             {dev.email &&
               <div>
                 <FiMail />
-                <span>{dev.email}</span>
+                <a href={`mailto:${dev.email}`}>{dev.email}</a>
               </div>
             }
             {dev.company &&
@@ -202,9 +202,9 @@ export default function Dev() {
             }
 
             { user &&
-              <button type="button" onClick={handleFollowDev}>
+              <FollowButton type="button" onClick={handleFollowDev} followed={isFollowed}>
                 { !isFollowed ? `Follow @${dev.login}` : `Unfollow @${dev.login}` }
-              </button>
+              </FollowButton>
             }
           </div>
 

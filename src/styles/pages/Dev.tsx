@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+type StyledFollowButtonProps = {
+  followed: boolean;
+}
+
 export const Main = styled.main`
   margin-top: 3.75rem;
   text-align: center;
@@ -49,24 +53,6 @@ export const Main = styled.main`
       gap: 1rem;
       color: ${(props) => props.theme.colors.primary};
 
-      > button {
-        background: transparent;
-        border: 2px solid ${(props) => props.theme.colors.primary};
-        outline: 0;
-        margin: 2rem 0;
-        padding: 1rem 1.5rem;
-        color: ${(props) => props.theme.colors.primary};
-        font: ${(props) => props.theme.fonts.heading400};
-        border-radius: 50px;
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
-
-        &:hover {
-          color: ${(props) => props.theme.colors.white};
-          background: ${(props) => props.theme.colors.primary};
-        }
-      }
-
       > div  {
         display: flex;
         align-items: center;
@@ -99,6 +85,24 @@ export const Main = styled.main`
     }
   }
 `
+
+export const FollowButton = styled.button<StyledFollowButtonProps>`
+  background: ${props => props.followed ? props.theme.colors.primary : 'transparent' };
+  border: 2px solid ${(props) => props.theme.colors.primary};
+  outline: 0;
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  color: ${props => props.followed ? props.theme.colors.white : props.theme.colors.primary };
+  font: ${(props) => props.theme.fonts.heading400};
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    color: ${(props) => props.theme.colors.white};
+    background: ${(props) => props.theme.colors.primary};
+  }
+`;
 
 export const Title = styled.h1`
   margin-top: 7.5rem;

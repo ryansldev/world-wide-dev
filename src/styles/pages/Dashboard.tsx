@@ -34,7 +34,6 @@ export const Main = styled.main`
   }
 
   > button {
-    width: 18.75rem;
     background: transparent;
     border: 2px solid ${(props) => props.theme.colors.primary};
     outline: 0;
