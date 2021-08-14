@@ -8,6 +8,7 @@ type Dev = {
   login: string;
   html_url?: string;
   avatar_url?: string;
+  registered?: boolean;
 }
 
 type DevsListProps = {
@@ -21,7 +22,7 @@ export function DevsList({ devs, children }: DevsListProps) {
       { children }
       <div>
         {
-          devs.map((dev) => <MinifiedDevCard key={dev.id} login={dev.login} avatar_url={dev.avatar_url} html_url={dev.html_url} />)
+          devs.map((dev) => <MinifiedDevCard key={dev.id} login={dev.login} avatar_url={dev.avatar_url} html_url={dev.html_url} registered={dev.registered} />)
         }
       </div>
     </List>
