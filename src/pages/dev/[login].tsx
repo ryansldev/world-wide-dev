@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail } from 'react-icons/fi';
@@ -79,6 +79,9 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
       }
 
       const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
+
+      followingData.map((follower) => usersIds.includes(follower.id) ? follower.registered = true : follower.registered = false);
+      
       setFollowing(followingData);
 
       async function paginateFollowedDevs() {
