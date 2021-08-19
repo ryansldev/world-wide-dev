@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FiMapPin, FiLink } from "react-icons/fi";
+import { FiMapPin, FiLink, FiUserCheck } from "react-icons/fi";
 import { Card, Head, Content, Footer } from "./styles";
 
 type DevCardProps = {
@@ -10,6 +10,7 @@ type DevCardProps = {
   location?: string;
   blog?: string;
   avatar_url?: string;
+  registered?: boolean;
 };
 
 export function DevCard({
@@ -20,6 +21,7 @@ export function DevCard({
   location,
   blog,
   avatar_url,
+  registered
 }: DevCardProps) {
   return (
     <Link href={`/dev/${login}`} passHref={true}>
@@ -32,6 +34,10 @@ export function DevCard({
             @{login}
           </a>
         </Head>
+
+        {
+          registered && <FiUserCheck />
+        }
 
         <Content>
           <b>Biography</b>

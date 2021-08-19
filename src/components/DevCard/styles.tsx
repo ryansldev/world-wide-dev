@@ -22,6 +22,15 @@ export const Card = styled.article`
     align-self: center;
     margin-top: -3.775rem;
   }
+
+  > svg {
+    position: absolute;
+    margin-left: 15rem;
+    margin-top: -0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: ${(props) => props.theme.colors.primary400};
+  }
 `;
 
 export const Head = styled.header`

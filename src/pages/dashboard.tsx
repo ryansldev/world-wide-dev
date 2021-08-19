@@ -24,6 +24,18 @@ type User = {
   registered?: boolean;
 };
 
+type RecommendedDev = {
+  id: string;
+  login: string;
+  bio: string;
+  avatar_url: string;
+  html_url?: string;
+  blog: string;
+  name: string;
+  location?: string;
+  registered?: boolean;
+}
+
 type dashboardProps = {
   usersIds: string[]; // static props
 }
@@ -225,10 +237,26 @@ export default function Home({ usersIds }: dashboardProps) {
       parsedRecommendedDevsList.map(async (dev) => await getFullInfoProfile(dev))
     );
 
-    const listOfRecommendedDevsInJSON = JSON.stringify(listOfRecommendedDevs);
-    localStorage.setItem('WWD_RECOMMENDED_DEVS', listOfRecommendedDevsInJSON)
+    const RecommendedDevsListFiltered = listOfRecommendedDevs.map((dev) => {
+      const filteredDevData = {
+        id: dev.id,
+        login: dev.login,
+        bio: dev.bio,
+        avatar_url: dev.avatar_url,
+        html_url: dev.html_url,
+        blog: dev.blog,
+        name: dev.name,
+        location: dev.location,
+        registered: usersIds.includes(dev.id),
+      } as RecommendedDev;
 
-    setRecommendedDevs(listOfRecommendedDevs);
+      return filteredDevData;
+    });
+
+    const listOfRecommendedDevsInJSON = JSON.stringify(RecommendedDevsListFiltered);
+    localStorage.setItem('WWD_RECOMMENDED_DEVS', listOfRecommendedDevsInJSON);
+
+    setRecommendedDevs(RecommendedDevsListFiltered);
     getGithubRequestsInfo();
     setIsLoadingRecommendedDevs(false);
   }
@@ -366,7 +394,7 @@ export default function Home({ usersIds }: dashboardProps) {
                 blog={dev?.blog}
                 name={dev?.name}
                 location={dev?.location}
-                // registered={dev.registered}
+                registered={dev.registered}
               />
             )
           })}
