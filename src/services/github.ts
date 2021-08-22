@@ -7,6 +7,14 @@ type searchDevParams = {
   token?: string;
 }
 
+type followingDevsParams = {
+  login: string;
+  page?: number;
+  per_page?: number;
+  token?: string;
+  getAll?: boolean;
+}
+
 export const api = axios.create({
   baseURL: "https://api.github.com",
 });
@@ -36,4 +44,43 @@ export const searchDevs = async ({ username, language, location, token }: search
   });
 
   return result;
+}
+
+export const followingDevs = async ({ login, page, per_page, token, getAll }: followingDevsParams) => {
+  const indexOfPage = page ? page : 1;
+  const numberPerPage = per_page ? per_page : 100;
+
+  var stopCondition = false;
+  var accumalator = 0;
+
+  const request = async () => await api.get(`users/${login}/following`, {
+    headers: {
+      Authorization: `${token ? `token ${token}` : ''}`,
+    },
+    params: {
+      page: indexOfPage + accumalator,
+      per_page: numberPerPage
+    },
+  });
+
+  const followingDevs = []; 
+
+  if(getAll) {
+    while(stopCondition === false) {
+      const devs = await request();
+  
+      if(devs?.data?.length === 0) {
+        stopCondition = true;
+      }
+  
+      followingDevs.push(devs.data);
+  
+      accumalator++;
+    }
+  } else {
+    const devs = await request();
+    followingDevs.push(devs);
+  } 
+
+  return followingDevs;
 }
