@@ -5,7 +5,7 @@ import { useState, useEffect, FormEvent } from "react";
 import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 
-import { api as githubAPI } from "../services/github";
+import { api as githubAPI, searchDevs } from "../services/github";
 
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -37,7 +37,7 @@ type RecommendedDev = {
 }
 
 type dashboardProps = {
-  usersIds: string[]; // static props
+  usersIds: string[];
 }
 
 import { database } from "../services/firebase";
@@ -265,30 +265,13 @@ export default function Home({ usersIds }: dashboardProps) {
     event.preventDefault();
     setIsLoadingDevs(true);
 
-    var query: string = '';
     const token = sessionStorage.getItem('access_token');
 
-    if (username.includes('@')) {
-      query = query + `${username.substring(1).trim()} in:login`
-    } else {
-      query = query + `${username.trim()} in:name `;
-    }
-
-    if (location) {
-      query = query + `location:${location.trim()} `;
-    }
-
-    if (language) {
-      query = query + `language:${language.trim()} `;
-    }
-
-    const result = await githubAPI.get(`search/users`, {
-      headers: {
-        Authorization: `${token ? `token ${token}` : ''}`,
-      },
-      params: {
-        q: query,
-      },
+    const result = await searchDevs({
+      username, 
+      language,
+      location,
+      token
     });
 
     const usersResponseData = result?.data?.items as User[];
