@@ -8,6 +8,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { database } from "../../services/firebase";
 
 import { Header } from '../../components/Header';
+import { Footer } from '../../components/Footer';
+
 import { DevsList } from '../../components/DevsList';
 
 import { api as githubAPI } from '../../services/github';
@@ -81,7 +83,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
       const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
 
       followingData.map((follower) => usersIds.includes(follower.id) ? follower.registered = true : follower.registered = false);
-      
+
       setFollowing(followingData);
 
       async function paginateFollowedDevs() {
@@ -227,6 +229,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
             {following.length !== 0 ? <Title>Who does <strong>{dev?.name ? dev?.name : dev?.login}</strong> follow?</Title> : <span><strong>{dev?.name}</strong> ainda não segue ninguém</span>}
           </DevsList>
         </div>
+        <Footer />
       </Main>
     </>
   )
@@ -272,8 +275,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 type LoginStaticParams = {
-  params: { 
-    login: string 
+  params: {
+    login: string
   };
 };
 
