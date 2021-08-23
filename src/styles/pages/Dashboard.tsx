@@ -19,7 +19,7 @@ export const Main = styled.main`
     max-width: 90vw;
     width: 73.125rem;
 
-    margin: 3.75rem 0 0 0;
+    margin: 3.75rem 0 7.5rem 0;
 
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16.125rem, auto));
@@ -55,6 +55,7 @@ export const Main = styled.main`
     display: flex;
     flex-wrap: wrap;
     gap: 5rem 2rem;
+    margin: 0;
   }
 
   @media (max-width: 572px) {
