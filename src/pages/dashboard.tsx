@@ -8,6 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import { api as githubAPI, searchDevs } from "../services/github";
 
 import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 import { SearchBar } from "../components/SearchBar";
 import { FilterInput } from '../components/FilterInput';
 import { MinifiedDevCard } from "../components/MinifiedDevCard";
@@ -268,7 +269,7 @@ export default function Home({ usersIds }: dashboardProps) {
     const token = sessionStorage.getItem('access_token');
 
     const result = await searchDevs({
-      username, 
+      username,
       language,
       location,
       token
@@ -400,6 +401,7 @@ export default function Home({ usersIds }: dashboardProps) {
         </section>
         { recommendedDevs.length === 0 && <h2>Make your recommended search of devs!</h2> }
         { user && <button type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</button> }
+        <Footer />
       </Main>
     </>
   );

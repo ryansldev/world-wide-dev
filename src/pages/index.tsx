@@ -6,6 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
 
 import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 import { LoginButton } from '../components/LoginButton';
 
 import { HomeStyled } from '../styles/Home';
@@ -66,6 +67,7 @@ export default function Home() {
           with other developers! :D
         </p>
       </div>
+      <Footer />
     </HomeStyled>
   );
 }
