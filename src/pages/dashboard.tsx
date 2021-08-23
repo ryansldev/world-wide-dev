@@ -63,8 +63,8 @@ export default function Home({ usersIds }: dashboardProps) {
 
   useEffect(() => {
     var recommendedDevsList = [];
-    if(localStorage.hasOwnProperty("WWD_RECOMMENDED_DEVS") && localStorage.getItem("WWD_RECOMMENDED_DEVS") !== '') {
-      recommendedDevsList = JSON.parse(localStorage.getItem("WWD_RECOMMENDED_DEVS"));
+    if(sessionStorage.hasOwnProperty("WWD_RECOMMENDED_DEVS") && sessionStorage.getItem("WWD_RECOMMENDED_DEVS") !== '') {
+      recommendedDevsList = JSON.parse(sessionStorage.getItem("WWD_RECOMMENDED_DEVS"));
     }
 
     setRecommendedDevs(recommendedDevsList);
@@ -255,7 +255,7 @@ export default function Home({ usersIds }: dashboardProps) {
     });
 
     const listOfRecommendedDevsInJSON = JSON.stringify(RecommendedDevsListFiltered);
-    localStorage.setItem('WWD_RECOMMENDED_DEVS', listOfRecommendedDevsInJSON);
+    sessionStorage.setItem('WWD_RECOMMENDED_DEVS', listOfRecommendedDevsInJSON);
 
     setRecommendedDevs(RecommendedDevsListFiltered);
     getGithubRequestsInfo();
