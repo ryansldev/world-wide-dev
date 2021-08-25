@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const ContainerSearchBar = styled.div`
+  display: flex;
+`;
+
 export const StyledSearchBar = styled.div`
   > input {
     width: 30rem;
@@ -40,4 +44,18 @@ export const StyledSearchBar = styled.div`
       color: ${(props) => props.theme.colors.primary400};
     }
   }
+`;
+
+export const StyledFilterButton = styled.button`
+  width: 4.5rem;
+  background: ${props => props.theme.colors.white};
+  border: 0;
+  outline: 0;
+  border-radius: 50% 50%;
+  font-size: 1.4rem;
+  margin-left: 1.5rem;
+  color: ${(props) => props.theme.colors.primary};
+  box-shadow: 0px 4px 24px rgba(97, 84, 84, 0.15);
+  transition: .3s ease-in-out;
+  cursor: pointer;
 `;
