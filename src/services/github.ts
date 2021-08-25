@@ -15,6 +15,15 @@ type followingDevsParams = {
   getAll?: boolean;
 }
 
+type isFollowingBackParams = {
+  login: string;
+  loginOfFollowed: string;
+  page?: number;
+  per_page?: number;
+  token?: string;
+  getAll?: boolean;
+}
+
 export const api = axios.create({
   baseURL: "https://api.github.com",
 });
@@ -63,24 +72,38 @@ export const followingDevs = async ({ login, page, per_page, token, getAll }: fo
     },
   });
 
-  const followingDevs = []; 
+  const followingDevs = [];
 
   if(getAll) {
     while(stopCondition === false) {
       const devs = await request();
-  
+
       if(devs?.data?.length === 0) {
         stopCondition = true;
+        break;
       }
-  
-      followingDevs.push(devs.data);
-  
+
+      followingDevs.push(...devs.data);
+
       accumalator++;
     }
   } else {
     const devs = await request();
-    followingDevs.push(devs);
-  } 
+    followingDevs.push(...devs.data);
+  }
 
   return followingDevs;
+}
+
+export const isFollowingBack = async ({ login, loginOfFollowed, page, per_page, token, getAll }: isFollowingBackParams) => {
+  const followingDevsList = followingDevs({ login: loginOfFollowed, page, per_page, token, getAll });
+
+  var isFollowed = false;
+  (await followingDevsList).map(async (dev) => {
+    if(dev.contains(login)) {
+      isFollowed = true;
+    };
+  });
+
+  return isFollowed;
 }
