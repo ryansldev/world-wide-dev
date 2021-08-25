@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { FiUserCheck } from "react-icons/fi";
-import { StyledMinifiedDevCard } from "./styles";
+import { StyledMinifiedDevCard, NotFollowSpan } from "./styles";
 
 type MinifiedDevCardProps = {
   login: string;
   html_url: string;
   avatar_url: string;
+  followBack?: boolean;
   registered?: boolean;
 };
 
 export function MinifiedDevCard({
   login,
   avatar_url,
+  followBack = undefined,
   registered = false,
 }: MinifiedDevCardProps) {
   return (
@@ -24,12 +26,19 @@ export function MinifiedDevCard({
 
           <strong>@{login}</strong>
 
-          {registered && (
-            <footer>
-              <FiUserCheck />
-              <span>Signed User</span>
-            </footer>
-          )}
+          <footer>
+            {registered && (
+              <>
+                <FiUserCheck />
+                <span>Signed User</span>
+              </>
+            )}
+            {followBack !== undefined && (
+              <>
+                { followBack ? <span>Follow you</span> : <NotFollowSpan>Does not follow you</NotFollowSpan> }
+              </>
+            )}
+          </footer>
         </StyledMinifiedDevCard>
       </Link>
     </article>

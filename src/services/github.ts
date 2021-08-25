@@ -96,11 +96,11 @@ export const followingDevs = async ({ login, page, per_page, token, getAll }: fo
 }
 
 export const isFollowingBack = async ({ login, loginOfFollowed, page, per_page, token, getAll }: isFollowingBackParams) => {
-  const followingDevsList = followingDevs({ login: loginOfFollowed, page, per_page, token, getAll });
+  const followingDevsList = await followingDevs({ login: loginOfFollowed, page, per_page, token, getAll });
 
   var isFollowed = false;
-  (await followingDevsList).map(async (dev) => {
-    if(dev.contains(login)) {
+  followingDevsList.map((dev) => {
+    if(dev.login === login) {
       isFollowed = true;
     };
   });

@@ -5,7 +5,7 @@ import { useState, useEffect, FormEvent } from "react";
 import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 
-import { api as githubAPI, searchDevs } from "../services/github";
+import { api as githubAPI, searchDevs, isFollowingBack, followingDevs } from "../services/github";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -15,13 +15,14 @@ import { MinifiedDevCard } from "../components/MinifiedDevCard";
 import { DevCard } from "../components/DevCard";
 import { SearchForm } from "../components/SearchForm";
 
-import { Main } from "../styles/pages/Dashboard";
+import { Main, ButtonDarshboardPage, SearchedDevsSection, RecommendedDevsSection, ActionSection } from "../styles/pages/Dashboard";
 
 type User = {
   id: string;
   login: string;
   html_url: string;
   avatar_url?: string;
+  followBack?: boolean;
   registered?: boolean;
 };
 
@@ -56,6 +57,7 @@ export default function Home({ usersIds }: dashboardProps) {
   const [language, setLanguage] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [recommendedDevs, setRecommendedDevs] = useState([]);
+  const [devsThatFollowYou, setDevsThatFollowYou] = useState([]);
 
   useEffect(() => {
     getGithubRequestsInfo();
@@ -264,6 +266,8 @@ export default function Home({ usersIds }: dashboardProps) {
 
   async function handleSearchUser(event: FormEvent) {
     event.preventDefault();
+    setDevs([]);
+    setDevsThatFollowYou([]);
     setIsLoadingDevs(true);
 
     const token = sessionStorage.getItem('access_token');
@@ -279,6 +283,8 @@ export default function Home({ usersIds }: dashboardProps) {
 
     if (!usersResponseData || usersResponseData?.length === 0) {
       setDevs([]);
+      setIsLoadingDevs(false);
+      alert('We have not found any developer who has the information provided. Try put others values.');
       return;
     }
 
@@ -287,10 +293,10 @@ export default function Home({ usersIds }: dashboardProps) {
       return;
     }
 
-    const users = usersResponseData.map((user) => {
-      usersIds.includes(user.id) ? user.registered = true : user.registered = false;
-      return user;
-    });
+    const users = await Promise.all(usersResponseData.map(async (dev) => {
+      usersIds.includes(dev.id) ? dev.registered = true : dev.registered = false;
+      return dev;
+    }));
 
     setDevs(users);
     setIsLoadingDevs(false);
@@ -298,6 +304,36 @@ export default function Home({ usersIds }: dashboardProps) {
 
   function handleShowFilter() {
     setShowFilter(!showFilter);
+  }
+
+  async function handleIsFollowingDev() {
+    setDevs([]);
+    setDevsThatFollowYou([]);
+    document.body.scrollTop = 350; // For Safari
+    document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
+    alert('Now you go see the info of the devs who you follow');
+    setIsLoadingDevs(true);
+    const token = sessionStorage.getItem('access_token');
+    const listOfFollowedDevs = await followingDevs({ login: user.login, getAll: true, token });
+
+    const usersThatFollowYou = await Promise.all(listOfFollowedDevs.map(async (dev) => {
+      const response = await isFollowingBack({
+        login: user.login,
+        loginOfFollowed: dev.login,
+        getAll: true,
+        token
+      });
+
+      dev.followBack = response;
+      if(usersIds) {
+        console.log(usersIds);
+        usersIds.includes(dev.id) ? dev.registered = true : dev.registered = false;
+      }
+      return dev;
+    }));
+
+    setDevsThatFollowYou(usersThatFollowYou);
+    setIsLoadingDevs(false);
   }
 
   return (
@@ -342,7 +378,7 @@ export default function Home({ usersIds }: dashboardProps) {
           </div>
         </SearchForm>
 
-        <section>
+        <SearchedDevsSection>
           {devs.map((dev) => {
             return (
               <MinifiedDevCard
@@ -351,6 +387,19 @@ export default function Home({ usersIds }: dashboardProps) {
                 avatar_url={dev.avatar_url}
                 html_url={dev.html_url}
                 registered={dev.registered}
+              />
+            );
+          })}
+
+          {devsThatFollowYou.map((dev) => {
+            return (
+              <MinifiedDevCard
+                key={dev.id}
+                login={dev.login}
+                avatar_url={dev.avatar_url}
+                html_url={dev.html_url}
+                registered={dev.registered}
+                followBack={dev.followBack}
               />
             );
           })}
@@ -365,8 +414,8 @@ export default function Home({ usersIds }: dashboardProps) {
               </>
             )
           }
-        </section>
-        <section className="recommended-devs-section">
+        </SearchedDevsSection>
+        <RecommendedDevsSection>
           {recommendedDevs && recommendedDevs !== [] && recommendedDevs.map((dev, key) => {
             return (
               <DevCard
@@ -398,9 +447,14 @@ export default function Home({ usersIds }: dashboardProps) {
               </>
             )
           }
-        </section>
+        </RecommendedDevsSection>
         { recommendedDevs.length === 0 && <h2>Make your recommended search of devs!</h2> }
-        { user && <button type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</button> }
+        { user && (
+          <ActionSection>
+            <ButtonDarshboardPage type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</ButtonDarshboardPage>
+            <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+          </ActionSection>
+        )};
         <Footer />
       </Main>
     </>

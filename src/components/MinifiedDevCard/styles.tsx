@@ -43,6 +43,8 @@ export const StyledMinifiedDevCard = styled.a`
   footer {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     color: ${(props) => props.theme.colors.primary};
     gap: 0.5rem;
 
@@ -60,4 +62,8 @@ export const StyledMinifiedDevCard = styled.a`
     max-width: 90vw;
     padding: 1.5rem 1rem;
   }
+`;
+
+export const NotFollowSpan = styled.span`
+  color: ${(props) => props.theme.colors.heading};
 `;
