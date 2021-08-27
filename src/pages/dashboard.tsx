@@ -1,5 +1,6 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
+import Link from "next/link"
 
 import { useState, useEffect, FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -422,13 +423,24 @@ export default function Home({ usersIds }: dashboardProps) {
             )
           }
         </RecommendedDevsSection>
-        { recommendedDevs.length === 0 && <h2>Make your recommended search of devs!</h2> }
-        { user && (
-          <ActionSection>
-            <ButtonDarshboardPage type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</ButtonDarshboardPage>
-            <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
-          </ActionSection>
-        )};
+        { recommendedDevs.length === 0 && user && <h2>Make your recommended search of devs!</h2> }
+        { recommendedDevs.length === 0 && !user && <h2>SignIn and search for recommended devs!</h2>}
+        <ActionSection>
+          { user &&
+            <>
+              <ButtonDarshboardPage type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</ButtonDarshboardPage>
+              <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+            </>
+          }
+          {!user &&
+            <Link href={'/'} passHref={true}>
+              <ButtonDarshboardPage type="button">
+                SignIn with your GitHub account
+              </ButtonDarshboardPage>
+            </Link>
+          }
+        </ActionSection>
+
         <Footer />
       </Main>
     </>
