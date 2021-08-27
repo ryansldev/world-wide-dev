@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail } from 'react-icons/fi';
+import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import { useAuth } from "../../hooks/useAuth";
@@ -14,7 +14,7 @@ import { DevsList } from '../../components/DevsList';
 
 import { api as githubAPI } from '../../services/github';
 
-import { Main, Title, FollowButton } from '../../styles/pages/Dev';
+import { Main, Title, FollowButton, Pagination } from '../../styles/pages/Dev';
 
 type devPageProps = {
   usersIds: string[];
@@ -51,6 +51,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
   const { login }: DevQueryParams = router.query;
   const [dev, setDev] = useState<Dev | null>(staticUser);
   const [following, setFollowing] = useState<Following[]>([]);
+  var [pageOfFollowing, setPageOfFollowing] = useState(1);
   const [isFollowed, setIsFollowed] = useState(false);
 
   const { user, getGithubRequestsInfo } = useAuth();
@@ -80,8 +81,8 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
         setDev(devData);
       }
 
-      const { data: followingData } = await githubAPI.get(`/users/${login}/following`);
-
+      setPageOfFollowing(1);
+      const { data: followingData } = await githubAPI.get(`/users/${login}/following?page=${pageOfFollowing}`);
       followingData.map((follower) => usersIds.includes(follower.id) ? follower.registered = true : follower.registered = false);
 
       setFollowing(followingData);
@@ -160,6 +161,45 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
     }
   }
 
+  async function nextPageFollowedDevs() {
+    const token = sessionStorage.getItem('access_token');
+    const { data: followingData } = await githubAPI.get(`/users/${login}/following?page=${pageOfFollowing + 1}`, {
+      headers: {
+        Authorization: `${token ? `token ${token}` : ''}`,
+      },
+    });
+
+    if(followingData.length === 0) {
+      alert('The pages are over! ;-;');
+      return;
+    }
+
+    await followingData.map((follower) => usersIds.includes(follower.id) ? follower.registered = true : follower.registered = false);
+    setFollowing(followingData);
+    setPageOfFollowing(pageOfFollowing + 1);
+  }
+
+  async function previousPageFollowedDevs() {
+    const token = sessionStorage.getItem('access_token');
+    if(pageOfFollowing !== 1) {
+      const { data: followingData } = await githubAPI.get(`/users/${login}/following?page=${pageOfFollowing - 1}`, {
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        },
+      });
+
+      if(followingData.length === 0) {
+        return;
+      }
+
+      await followingData.map((follower) => usersIds.includes(follower.id) ? follower.registered = true : follower.registered = false);
+      setFollowing(followingData);
+      setPageOfFollowing(pageOfFollowing - 1);
+    }
+
+    return;
+  }
+
   return (
     <>
       <Head>
@@ -226,8 +266,20 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
           </div>
 
           <DevsList devs={following}>
-            {following.length !== 0 ? <Title>Who does <strong>{dev?.name ? dev?.name : dev?.login}</strong> follow?</Title> : <span><strong>{dev?.name}</strong> ainda não segue ninguém</span>}
+            {following.length !== 0
+              ? <Title>Who does <strong>{dev?.name ? dev?.name : dev?.login}</strong> follow?</Title>
+              : <span><strong>{dev?.name}</strong> ainda não segue ninguém</span>
+            }
           </DevsList>
+          <Pagination>
+            <button onClick={previousPageFollowedDevs}>
+              <FiChevronLeft size={20} />
+            </button>
+            <span>Page {pageOfFollowing}</span>
+            <button onClick={nextPageFollowedDevs}>
+              <FiChevronRight size={20} />
+            </button>
+          </Pagination>
         </div>
         <Footer />
       </Main>

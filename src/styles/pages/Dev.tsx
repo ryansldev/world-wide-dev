@@ -114,3 +114,24 @@ export const Title = styled.h1`
     font-size: 2rem;
   }
 `;
+
+export const Pagination = styled.div`
+  display: flex;
+  gap: 3rem;
+
+  justify-content: center;
+  align-items: center;
+  color: ${(props) => props.theme.colors.primary};
+
+  > button {
+    width: 2rem;
+    height: 2rem;
+
+    background: ${props => props.theme.colors.darkBluePrimary};
+    color: ${(props) => props.theme.colors.primary};
+    border-radius: 50%;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+  }
+`;

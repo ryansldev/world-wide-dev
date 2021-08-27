@@ -109,6 +109,10 @@ export default function Home({ usersIds }: dashboardProps) {
 
     const token = sessionStorage.getItem('access_token');
     const followingDevsArr = await followingDevs({ login: user.login, getAll: true, token });
+    if(followingDevsArr.length === 0) {
+      alert('Do you need follow some user to use this function, do you need to follow users that follow more than 10 other users too.');
+      return;
+    }
 
     async function filterFollowingDevs(dev) {
       if(dev) {
@@ -118,7 +122,7 @@ export default function Home({ usersIds }: dashboardProps) {
           },
         });
 
-        if(data.length >= 20) {
+        if(data.length >= 10) {
           return true;
         } else {
           return false;
