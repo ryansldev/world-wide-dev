@@ -297,7 +297,6 @@ export default function Home({ usersIds }: dashboardProps) {
 
       dev.followBack = response;
       if(usersIds) {
-        console.log(usersIds);
         usersIds.includes(dev.id) ? dev.registered = true : dev.registered = false;
       }
       return dev;
