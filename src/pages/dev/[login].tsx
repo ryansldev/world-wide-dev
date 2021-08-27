@@ -268,18 +268,20 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
           <DevsList devs={following}>
             {following.length !== 0
               ? <Title>Who does <strong>{dev?.name ? dev?.name : dev?.login}</strong> follow?</Title>
-              : <span><strong>{dev?.name}</strong> ainda não segue ninguém</span>
+              : <span style={{ marginTop: '1.5rem' }}><strong>{dev?.name}</strong> ainda não segue ninguém</span>
             }
           </DevsList>
-          <Pagination>
-            <button onClick={previousPageFollowedDevs}>
-              <FiChevronLeft size={20} />
-            </button>
-            <span>Page {pageOfFollowing}</span>
-            <button onClick={nextPageFollowedDevs}>
-              <FiChevronRight size={20} />
-            </button>
-          </Pagination>
+          {following.length !== 0 && following.length &&
+            <Pagination>
+              <button onClick={previousPageFollowedDevs}>
+                <FiChevronLeft size={20} />
+              </button>
+              <span>Page {pageOfFollowing}</span>
+              <button onClick={nextPageFollowedDevs}>
+                <FiChevronRight size={20} />
+              </button>
+            </Pagination>
+          }
         </div>
         <Footer />
       </Main>
