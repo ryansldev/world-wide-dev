@@ -108,34 +108,7 @@ export default function Home({ usersIds }: dashboardProps) {
     }
 
     const token = sessionStorage.getItem('access_token');
-    var count = 0;
-    async function paginateFollowedDevs() {
-      const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
-        headers: {
-          Authorization: `${token ? `token ${token}` : ''}`
-        },
-      });
-
-      if(data.length !== 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    const followingDevs = [];
-    if(token !== '' && user) {
-      while(await paginateFollowedDevs() === true) {
-        const { data } = await githubAPI.get(`/users/${user.login}/following?page=${count++}&per_page=100`, {
-          headers: {
-            Authorization: `${token ? `token ${token}` : ''}`,
-          },
-        });
-
-        followingDevs.push(data);
-        count++;
-      };
-    }
+    const followingDevsArr = await followingDevs({ login: user.login, getAll: true, token });
 
     async function filterFollowingDevs(dev) {
       if(dev) {
@@ -145,7 +118,7 @@ export default function Home({ usersIds }: dashboardProps) {
           },
         });
 
-        if(data.length >= 10) {
+        if(data.length >= 20) {
           return true;
         } else {
           return false;
@@ -155,7 +128,7 @@ export default function Home({ usersIds }: dashboardProps) {
       }
     }
 
-    const filteredFollowingDevs = followingDevs[0].filter((dev) => filterFollowingDevs(dev));
+    const filteredFollowingDevs = followingDevsArr.filter((dev) => filterFollowingDevs(dev));
 
     const shuffleredFollowingDevs = shuffleArray(filteredFollowingDevs);
     const followedDevs = [
@@ -176,12 +149,10 @@ export default function Home({ usersIds }: dashboardProps) {
 
         function filterFollowedDevsOfTheFollowedDevs(dev) {
           const listOfFollowedDevs = [];
-          followingDevs.map((element) => {
-            element.map((followedDev) => {
-              if(dev && followedDev.login === dev.login) {
-                listOfFollowedDevs.push(followedDev.login);
-              };
-            });
+          followingDevsArr.map((followedDev) => {
+            if(dev && followedDev.login === dev.login) {
+              listOfFollowedDevs.push(followedDev.login);
+            };
           });
 
           if(listOfFollowedDevs.includes(dev.login)) {
