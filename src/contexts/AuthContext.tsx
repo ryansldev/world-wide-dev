@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, ReactNode } from "react";
 import { firebase, auth, database } from "../services/firebase";
-import { api as githubApi } from "../services/github";
+import { api as githubApi, getLinksOnBio } from "../services/github";
 
 type User = {
   uid: string;
@@ -13,7 +13,13 @@ type User = {
   blog?: string;
   company?: string;
   location?: string;
+  linksInBioInfo?: Array<LinksOnBio>;
 };
+
+type LinksOnBio = {
+  linkTitle: string;
+  href: string;
+}
 
 type GithubApiInfo = {
   limit: number;
@@ -131,6 +137,11 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
       throw new Error("Missing information from GitHub Account.");
     }
 
+    const linksOnBio = getLinksOnBio(bio);
+    const linksInBioInfo = linksOnBio.map((element) => {
+      return({ linkTitle: element.linkTitle, href: element.href });
+    });
+
     const user = {
       uid,
       email,
@@ -142,6 +153,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
       blog,
       company,
       location,
+      linksInBioInfo,
     };
 
     setUser(user);

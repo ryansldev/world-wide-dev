@@ -107,3 +107,41 @@ export const isFollowingBack = async ({ login, loginOfFollowed, page, per_page, 
 
   return isFollowed;
 }
+
+type linksInBioInfo = {
+  href: string;
+  linkTitle: string;
+}
+
+export const getLinksOnBio = (bio: string) => {
+  const linksInBio: linksInBioInfo[] = [];
+
+  function getLinks(bioFunction) {
+    if(bioFunction) {
+      const filterUserConditions = ['.', ',', '|', '_', '~', '—', ';', '@'];
+      const splitBio = bioFunction.split(' ');
+      splitBio.map((element) => {
+        if(!element.includes('@')) {
+          return;
+        };
+
+        var getUser = element;
+        filterUserConditions.map((letter) => {
+          getUser = getUser.replaceAll(letter, '');
+        });
+
+
+        linksInBio.push({ linkTitle: `@${getUser}`, href: `https://github.com/${getUser}` });
+        if(splitBio[splitBio.length - 1].includes('@')) {
+          getLinks(splitBio[splitBio.length]);
+        }
+      })
+
+      return linksInBio;
+    }
+
+    return;
+  }
+
+  return getLinks(bio);
+}

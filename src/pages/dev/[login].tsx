@@ -12,7 +12,7 @@ import { Footer } from '../../components/Footer';
 
 import { DevsList } from '../../components/DevsList';
 
-import { api as githubAPI } from '../../services/github';
+import { api as githubAPI, getLinksOnBio } from '../../services/github';
 
 import { Main, Title, FollowButton, Pagination } from '../../styles/pages/Dev';
 
@@ -36,7 +36,13 @@ type Dev = {
   blog?: string;
   email?: string;
   company?: string;
+  linksInBioInfo?: Array<LinksOnBio>;
   twitter_username?: string;
+}
+
+type LinksOnBio = {
+  linkTitle: string;
+  href: string;
 }
 
 type Following = {
@@ -53,6 +59,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
   const [following, setFollowing] = useState<Following[]>([]);
   var [pageOfFollowing, setPageOfFollowing] = useState(1);
   const [isFollowed, setIsFollowed] = useState(false);
+  var countOfUsersInTheBio = 0;
 
   const { user, getGithubRequestsInfo } = useAuth();
 
@@ -77,6 +84,13 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
         if(devData.blog && !devData.blog.includes('://')) {
           devData.blog = (`https://${devData.blog}`);
         };
+
+        const linksOnBio = getLinksOnBio(devData.bio);
+        if(linksOnBio) {
+          devData.linksInBioInfo = linksOnBio.map((element) => {
+            return({ linkTitle: element.linkTitle, href: element.href });
+          })
+        }
 
         setDev(devData);
       }
@@ -213,7 +227,23 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
             <h1>{dev?.name ? dev?.name : dev?.login}</h1>
             <h2>@{login}</h2>
           </a>
-          <p>{dev?.bio}</p>
+          <p>
+            {dev?.bio &&
+              dev?.bio.split(' ').map((partBio) => {
+                function generateUserLink() {
+                  if(dev?.linksInBioInfo) {
+                    countOfUsersInTheBio = countOfUsersInTheBio + 1;
+                    return <a href={dev?.linksInBioInfo[countOfUsersInTheBio - 1]?.href} target="_blank" rel="noopener noreferrer">{dev?.linksInBioInfo[countOfUsersInTheBio - 1]?.linkTitle} </a>
+                  }
+                }
+
+                return (dev?.bio && !partBio.includes('@')
+                  ? partBio + ' '
+                  : generateUserLink()
+                )
+              })
+            }
+          </p>
           <div className="more-infos">
             {dev?.location &&
               <div>
