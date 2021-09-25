@@ -59,7 +59,6 @@ export default function Home({ usersIds }: dashboardProps) {
   const [showFilter, setShowFilter] = useState(false);
   const [recommendedDevs, setRecommendedDevs] = useState([]);
   const [devsThatFollowYou, setDevsThatFollowYou] = useState([]);
-  const [informedDevParameterToRecommendedDevs, setInformedDevParameterToRecommendedDevs] = useState('');
 
   useEffect(() => {
     getGithubRequestsInfo();
@@ -74,7 +73,7 @@ export default function Home({ usersIds }: dashboardProps) {
     setRecommendedDevs(recommendedDevsList);
   }, []);
 
-  async function handleSearchRecommendedUsers(user) {
+  async function handleSearchRecommendedUsers() {
     document.body.scrollTop = 350; // For Safari
     document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
     setRecommendedDevs([]);
@@ -458,17 +457,8 @@ export default function Home({ usersIds }: dashboardProps) {
         <ActionSection>
           { user &&
             <>
+              <ButtonDarshboardPage type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</ButtonDarshboardPage>
               <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
-              <ButtonDarshboardPage type="button" onClick={() => handleSearchRecommendedUsers(!user ? { login: informedDevParameterToRecommendedDevs } : user)}>Recommended Search</ButtonDarshboardPage>
-            </>
-          }
-          { !user &&
-            <>
-              <input
-                type="text"
-                onChange={(event) => setInformedDevParameterToRecommendedDevs(event.target.value)}
-                value={informedDevParameterToRecommendedDevs}
-              />
             </>
           }
           {!user &&

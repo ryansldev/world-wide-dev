@@ -1,6 +1,9 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
+import Router from 'next/router'
 import { useState, useEffect } from 'react';
+import toast from "react-hot-toast";
+
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -61,7 +64,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
   const [isFollowed, setIsFollowed] = useState(false);
   var countOfUsersInTheBio = 0;
 
-  const { user, getGithubRequestsInfo } = useAuth();
+  const { user, getGithubRequestsInfo, githubApiInfo } = useAuth();
 
   useEffect(() => {
     getGithubRequestsInfo();
@@ -76,6 +79,23 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
       const token = sessionStorage.getItem('access_token');
 
       if(!staticUser) {
+        if(githubApiInfo?.remaining === 0) {
+          toast.error("Do you need a request to access this page", {
+            style: {
+              background: "#F56565",
+              color: "#FFF",
+              fontFamily: "Poppins, sans-serif"
+            },
+            iconTheme: {
+              primary: "#FFF",
+              secondary: "#F56565"
+            }
+          });
+
+          Router.push('/dashboard');
+          return;
+        }
+
         const { data: devData } = await githubAPI.get(`/users/${login}`, {
           headers: {
             Authorization: `${token ? `token ${token}` : ''}`,
