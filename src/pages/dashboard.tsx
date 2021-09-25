@@ -456,19 +456,26 @@ export default function Home({ usersIds }: dashboardProps) {
         { recommendedDevs.length === 0 && user && <h2>Make your recommended search of devs!</h2> }
         { recommendedDevs.length === 0 && !user && <h2>SignIn and search for recommended devs!</h2>}
         <ActionSection>
+          <ButtonDarshboardPage type="button" onClick={() => handleSearchRecommendedUsers(!user ? { login: informedDevParameterToRecommendedDevs } : user)}>Recommended Search</ButtonDarshboardPage>
           { user &&
+            <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+          }
+          { !user &&
             <>
-              <ButtonDarshboardPage type="button" onClick={() => handleSearchRecommendedUsers(!user ? { login: informedDevParameterToRecommendedDevs } : user)}>Recommended Search</ButtonDarshboardPage>
-              <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+              <input
+                type="text"
+                onChange={(event) => setInformedDevParameterToRecommendedDevs(event.target.value)}
+                value={informedDevParameterToRecommendedDevs}
+              />
             </>
           }
-          {!user &&
+          {/* {!user &&
             <Link href={'/'} passHref={true}>
               <ButtonDarshboardPage type="button">
                 SignIn with your GitHub account
               </ButtonDarshboardPage>
             </Link>
-          }
+          } */}
         </ActionSection>
 
         <Footer />

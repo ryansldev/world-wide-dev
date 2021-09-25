@@ -61,13 +61,10 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
   const [isFollowed, setIsFollowed] = useState(false);
   var countOfUsersInTheBio = 0;
 
-  const { user, getGithubRequestsInfo, githubApiInfo } = useAuth();
+  const { user, getGithubRequestsInfo } = useAuth();
 
   useEffect(() => {
     getGithubRequestsInfo();
-    if(githubApiInfo?.remaining === 0) {
-      alert('Gay')
-    }
   }, [dev]);
 
   useEffect(() => {
@@ -333,7 +330,6 @@ type User = {
   blog?: string;
   company?: string;
   location?: string;
-  linksInBioInfo?: Array<LinksOnBio>;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
