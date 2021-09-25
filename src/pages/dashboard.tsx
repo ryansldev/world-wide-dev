@@ -6,9 +6,7 @@ import { useState, useEffect, FormEvent } from "react";
 import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 
-import {
-  api as githubAPI, searchDevs, isFollowingBack, followingDevs, getFullInfoProfile, getDevsOfInterest
-} from "../services/github";
+import { api as githubAPI, searchDevs, isFollowingBack, followingDevs } from "../services/github";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -148,7 +146,7 @@ export default function Home({ usersIds }: dashboardProps) {
     const filteredFollowingDevs = followingDevsArr.filter((dev) => filterFollowingDevs(dev));
 
     const shuffleredFollowingDevs = shuffleArray(filteredFollowingDevs);
-    const selectedFollowedDevs = [
+    const followedDevs = [
       shuffleredFollowingDevs[0],
       shuffleredFollowingDevs[1],
       shuffleredFollowingDevs[2],
@@ -156,10 +154,76 @@ export default function Home({ usersIds }: dashboardProps) {
       shuffleredFollowingDevs[4]
     ];
 
-    const DevsOfInterest: RecommendedDev[] = await getDevsOfInterest(user, token, followingDevsArr, selectedFollowedDevs, shuffleArray);
+    const parsedFollowedDevsOfTheFollowedDevs = await Promise.all(
+      followedDevs.map(async (dev) => {
+        const { data } = await githubAPI.get(`/users/${dev.login}/following`, {
+          headers: {
+            Authorization: `${token ? `token ${token}` : ''}`,
+          },
+        });
+
+        function filterFollowedDevsOfTheFollowedDevs(dev) {
+          const listOfFollowedDevs = [];
+          followingDevsArr.map((followedDev) => {
+            if(dev && followedDev.login === dev.login) {
+              listOfFollowedDevs.push(followedDev.login);
+            };
+          });
+
+          if(listOfFollowedDevs.includes(dev.login)) {
+            return false;
+          } else {
+            return dev.login !== user.login;
+          }
+        }
+
+        const filteredFollowedDevsOfTheFollowedDevs = data.filter((dev) => filterFollowedDevsOfTheFollowedDevs(dev));
+        const followedDevsOfTheFollowedDevs = filteredFollowedDevsOfTheFollowedDevs.reduce((unico, item) => {
+          return unico.includes(item) ? unico : [...unico, item];
+        }, []);
+
+        if(followedDevsOfTheFollowedDevs.length >= 3) {
+          const shuffleData = shuffleArray(followedDevsOfTheFollowedDevs);
+          return [shuffleData[0], shuffleData[1], shuffleData[2]];
+        }
+
+        return followedDevsOfTheFollowedDevs;
+      })
+    );
+
+    const followedDevsOfTheFollowedDevs = [];
+    await parsedFollowedDevsOfTheFollowedDevs.map((element) => {
+      element.map((dev) => {
+        followedDevsOfTheFollowedDevs.push(dev);
+      })
+
+      return;
+    });
+
+    const filteredFollowedDevsOfTheFollowedDevs = followedDevsOfTheFollowedDevs.filter((dev, i) => {
+      return followedDevsOfTheFollowedDevs.indexOf(dev) === i;
+    });
+
+    const parsedRecommendedDevsList = await filteredFollowedDevsOfTheFollowedDevs.map((dev) => {
+      return dev;
+    });
+
+    const getFullInfoProfile = async (dev: any) => {
+      const { data } = await githubAPI.get(`/users/${dev.login}`, {
+        headers: {
+          Authorization: `${token ? `token ${token}` : ''}`,
+        },
+      });
+
+      if(data.blog && !data.blog.includes('://')) {
+        data.blog = (`https://${data.blog}`);
+      };
+
+      return data;
+    }
 
     const listOfRecommendedDevs = await Promise.all(
-      DevsOfInterest.map(async (dev) => await getFullInfoProfile(dev, token))
+      parsedRecommendedDevsList.map(async (dev) => await getFullInfoProfile(dev))
     );
 
     const RecommendedDevsListFiltered = listOfRecommendedDevs.map((dev) => {

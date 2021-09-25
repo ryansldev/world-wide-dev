@@ -1,23 +1,5 @@
 import axios from "axios";
 
-type Dev = {
-  id?: string;
-  login: string;
-  bio?: string;
-  avatar_url?: string;
-  html_url?: string;
-  blog?: string;
-  name?: string;
-  location?: string;
-  registered?: boolean;
-  linksInBioInfo?: Array<LinksOnBio>;
-}
-
-type LinksOnBio = {
-  linkTitle: string;
-  href: string;
-}
-
 type searchDevParams = {
   username?: string;
   language?: string;
@@ -162,81 +144,4 @@ export const getLinksOnBio = (bio: string) => {
   }
 
   return getLinks(bio);
-}
-
-export const getFullInfoProfile = async (dev: Dev, token: string) => {
-  const { data } = await api.get(`/users/${dev.login}`, {
-    headers: {
-      Authorization: `${token ? `token ${token}` : ''}`,
-    },
-  });
-
-  if(data.blog && !data.blog.includes('://')) {
-    data.blog = (`https://${data.blog}`);
-  };
-
-  return data;
-}
-
-export const getDevsOfInterest = async (
-  user: Dev,
-  token: string,
-  followingDevsArr: Array<Dev>,
-  selectedFollowedDevs, shuffleArray
-) => {
-  // A function to filter Devs of Interest, this function remove people that follow the user
-  function filterDevsOfInterest(dev: Dev) {
-    const listOfFollowedDevs = [];
-    followingDevsArr.map((followedDev: Dev) => {
-      if(dev && followedDev.login === dev.login) {
-        listOfFollowedDevs.push(followedDev.login);
-      };
-    });
-
-    if(listOfFollowedDevs.includes(dev.login)) {
-      return false;
-    } else {
-      return dev.login !== user.login;
-    }
-  }
-
-  const parsedDevsOfInterest: Array<Dev[]> = await Promise.all(
-    selectedFollowedDevs.map(async (dev: Dev) => {
-      const { data } = await api.get(`/users/${dev.login}/following`, {
-        headers: {
-          Authorization: `${token ? `token ${token}` : ''}`,
-        },
-      });
-
-      const filteredDevsOfInterest = data.filter((dev: Dev) => filterDevsOfInterest(dev));
-
-      // Remove duplicated devs in the variable: filteredDevsOfInterest
-      const DevsOfInterest = filteredDevsOfInterest.reduce((unico, item) => {
-        return unico.includes(item) ? unico : [...unico, item];
-      }, []);
-
-      if(DevsOfInterest.length >= 3) {
-        const shuffleredPointsOfInterest = shuffleArray(DevsOfInterest);
-        return [shuffleredPointsOfInterest[0], shuffleredPointsOfInterest[1], shuffleredPointsOfInterest[2]];
-      }
-
-      return DevsOfInterest;
-    })
-  );
-
-  const DevsOfInterest = [];
-  // Agroup all data in one unique Array(DevsOfInterest)
-  await parsedDevsOfInterest.map((element: Dev[]) => {
-    element.map((dev: Dev) => {
-      DevsOfInterest.push(dev);
-    })
-
-    return;
-  });
-
-  const filteredDevsOfInterest = DevsOfInterest.filter((dev, i) => {
-    return DevsOfInterest.indexOf(dev) === i;
-  });
-
-  return filteredDevsOfInterest;
 }
