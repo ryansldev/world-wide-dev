@@ -1,9 +1,8 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
-import Router from 'next/router'
-import { useState, useEffect } from 'react';
-import toast from "react-hot-toast";
+import Router from 'next/router';
 
+import { useState, useEffect } from 'react';
 import { FiMapPin, FiLink, FiGithub, FiTwitter, FiMail, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { RiBuilding2Line } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -18,6 +17,7 @@ import { DevsList } from '../../components/DevsList';
 import { api as githubAPI, getLinksOnBio } from '../../services/github';
 
 import { Main, Title, FollowButton, Pagination } from '../../styles/pages/Dev';
+import toast from 'react-hot-toast';
 
 type devPageProps = {
   usersIds: string[];
@@ -75,27 +75,27 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
       return;
     }
 
+    if(githubApiInfo?.remaining === 0) {
+      toast.error("Do you need a request to access this page", {
+        style: {
+          background: "#F56565",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#F56565"
+        }
+      });
+
+      Router.push('/dashboard');
+      return;
+    }
+
     async function devData() {
       const token = sessionStorage.getItem('access_token');
 
       if(!staticUser) {
-        if(githubApiInfo?.remaining === 0) {
-          toast.error("Do you need a request to access this page", {
-            style: {
-              background: "#F56565",
-              color: "#FFF",
-              fontFamily: "Poppins, sans-serif"
-            },
-            iconTheme: {
-              primary: "#FFF",
-              secondary: "#F56565"
-            }
-          });
-
-          Router.push('/dashboard');
-          return;
-        }
-
         const { data: devData } = await githubAPI.get(`/users/${login}`, {
           headers: {
             Authorization: `${token ? `token ${token}` : ''}`,
@@ -350,6 +350,7 @@ type User = {
   blog?: string;
   company?: string;
   location?: string;
+  linksInBioInfo?: Array<LinksOnBio>;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
