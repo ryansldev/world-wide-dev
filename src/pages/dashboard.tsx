@@ -61,6 +61,7 @@ export default function Home({ usersIds }: dashboardProps) {
   const [showFilter, setShowFilter] = useState(false);
   const [recommendedDevs, setRecommendedDevs] = useState([]);
   const [devsThatFollowYou, setDevsThatFollowYou] = useState([]);
+  const [informedDevParameterToRecommendedDevs, setInformedDevParameterToRecommendedDevs] = useState('');
 
   useEffect(() => {
     getGithubRequestsInfo();
@@ -75,15 +76,14 @@ export default function Home({ usersIds }: dashboardProps) {
     setRecommendedDevs(recommendedDevsList);
   }, []);
 
-  async function handleSearchRecommendedUsers(event: FormEvent) {
-    event.preventDefault();
+  async function handleSearchRecommendedUsers(user) {
     document.body.scrollTop = 350; // For Safari
     document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
     setRecommendedDevs([]);
     setIsLoadingRecommendedDevs(true);
 
-    if(githubApiInfo.remaining < 15) {
-      toast.error("it takes at least fifteen nodes", {
+    if(githubApiInfo.remaining < 30) {
+      toast.error("it takes at thirty nodes", {
         style: {
           background: "#F56565",
           color: "#FFF",
@@ -113,7 +113,17 @@ export default function Home({ usersIds }: dashboardProps) {
     const token = sessionStorage.getItem('access_token');
     const followingDevsArr = await followingDevs({ login: user.login, getAll: true, token });
     if(followingDevsArr.length === 0) {
-      alert('Do you need follow some user to use this function, do you need to follow users that follow more than 10 other users too.');
+      toast.error("Do you need follow some user to use this function, do you need to follow users that follow more than 10 other users too.", {
+        style: {
+          background: "#F56565",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#F56565"
+        }
+      });
       return;
     }
 
@@ -196,7 +206,17 @@ export default function Home({ usersIds }: dashboardProps) {
     if (!usersResponseData || usersResponseData?.length === 0) {
       setDevs([]);
       setIsLoadingDevs(false);
-      alert('We have not found any developer who has the information provided. Try put others values.');
+      toast.error("We have not found any developer who has the information provided. Try put others values.", {
+        style: {
+          background: "#F56565",
+          color: "#FFF",
+          fontFamily: "Poppins, sans-serif"
+        },
+        iconTheme: {
+          primary: "#FFF",
+          secondary: "#F56565"
+        }
+      });
       return;
     }
 
@@ -223,7 +243,17 @@ export default function Home({ usersIds }: dashboardProps) {
     setDevsThatFollowYou([]);
     document.body.scrollTop = 350; // For Safari
     document.documentElement.scrollTop = 350; // For Chrome, Firefox, IE and Opera
-    alert('Now you go see the info of the devs who you follow');
+    toast.success("Getting info of the devs who you follow...", {
+      style: {
+        background: "#00c972",
+        color: "#FFF",
+        fontFamily: "Poppins, sans-serif"
+      },
+      iconTheme: {
+        primary: "#FFF",
+        secondary: "#00c972"
+      }
+    });
     setIsLoadingDevs(true);
     const token = sessionStorage.getItem('access_token');
     const listOfFollowedDevs = await followingDevs({ login: user.login, getAll: true, token });
@@ -362,19 +392,26 @@ export default function Home({ usersIds }: dashboardProps) {
         { recommendedDevs.length === 0 && user && <h2>Make your recommended search of devs!</h2> }
         { recommendedDevs.length === 0 && !user && <h2>SignIn and search for recommended devs!</h2>}
         <ActionSection>
+          <ButtonDarshboardPage type="button" onClick={() => handleSearchRecommendedUsers(!user ? { login: informedDevParameterToRecommendedDevs } : user)}>Recommended Search</ButtonDarshboardPage>
           { user &&
+            <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+          }
+          { !user &&
             <>
-              <ButtonDarshboardPage type="button" onClick={handleSearchRecommendedUsers}>Recommended Search</ButtonDarshboardPage>
-              <ButtonDarshboardPage type="button" onClick={handleIsFollowingDev}>Follow info</ButtonDarshboardPage>
+              <input
+                type="text"
+                onChange={(event) => setInformedDevParameterToRecommendedDevs(event.target.value)}
+                value={informedDevParameterToRecommendedDevs}
+              />
             </>
           }
-          {!user &&
+          {/* {!user &&
             <Link href={'/'} passHref={true}>
               <ButtonDarshboardPage type="button">
                 SignIn with your GitHub account
               </ButtonDarshboardPage>
             </Link>
-          }
+          } */}
         </ActionSection>
 
         <Footer />
