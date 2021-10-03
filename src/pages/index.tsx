@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../hooks/useAuth";
 
@@ -66,6 +67,10 @@ export default function Home() {
           <br />
           with other developers! :D
         </p>
+        <br />
+        <Link href={`/dashboard`} passHref={true}>
+          Continue as ghost
+        </Link>
       </div>
       <Footer />
     </HomeStyled>
