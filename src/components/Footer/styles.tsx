@@ -11,18 +11,24 @@ export const StyledFooter = styled.footer`
   margin-top: 11rem;
 
   background: ${(props) => props.theme.colors.darkBluePrimary};
+  text-align: center;
 
-  /* @media (max-width: 768px) {
+  @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-  } */
+  }
 `;
 
 export const StyledDiscordCommunity = styled.a`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  text-align: left;
   gap: 1.5rem;
+
+  @media (max-width: 357px) {
+    text-align: center;
+  }
 
   svg {
     color: ${(props) => props.theme.colors.primary};
@@ -38,4 +44,8 @@ export const Diviser = styled.div`
   height: 3rem;
   width: 1px;
   background: ${props => props.theme.colors.title};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
