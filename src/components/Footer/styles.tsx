@@ -11,6 +11,11 @@ export const StyledFooter = styled.footer`
   margin-top: 11rem;
 
   background: ${(props) => props.theme.colors.darkBluePrimary};
+
+  /* @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  } */
 `;
 
 export const StyledDiscordCommunity = styled.a`
