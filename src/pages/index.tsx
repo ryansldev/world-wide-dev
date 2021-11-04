@@ -69,7 +69,7 @@ export default function Home() {
         </p>
         <br />
         <Link href={`/dashboard`} passHref={true}>
-          Continue as ghost
+          Continue as guest
         </Link>
       </div>
       <Footer />
