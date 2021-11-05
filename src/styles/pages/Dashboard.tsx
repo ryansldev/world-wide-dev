@@ -5,6 +5,7 @@ export const Main = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   > form {
     max-width: 90vw;
@@ -67,6 +68,15 @@ export const ButtonDarshboardPage = styled.button`
     color: ${(props) => props.theme.colors.white};
     background: ${(props) => props.theme.colors.primary};
   }
+
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+
+  @media (max-width: 484px) {
+    flex: 1;
+    width: 100%;
+  }
 `;
 
 export const ActionSection = styled.section`
@@ -77,4 +87,15 @@ export const ActionSection = styled.section`
   gap: 1.5rem;
 
   margin-top: 2rem;
+
+  @media (max-width: 768px) {
+    gap: 1em;
+    margin: 2em;
+  }
+
+  @media (max-width: 484px) {
+    flex-direction: column;
+    width: 100%;
+    max-width: 90vw;
+  }
 `;
