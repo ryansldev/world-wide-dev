@@ -308,7 +308,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
               </div>
             }
 
-            { user &&
+            { user && user?.login !== dev?.login &&
               <FollowButton type="button" onClick={handleFollowDev} followed={isFollowed}>
                 { !isFollowed ? `Follow @${dev?.login}` : `Unfollow @${dev?.login}` }
               </FollowButton>
