@@ -10,6 +10,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { database } from "../../services/firebase";
 
 import { Header } from '../../components/Header';
+import { CookieWarning } from '../../components/CookieWarning';
 import { Footer } from '../../components/Footer';
 
 import { DevsList } from '../../components/DevsList';
@@ -333,6 +334,7 @@ export default function Dev({ usersIds, staticUser }: devPageProps) {
             </Pagination>
           }
         </div>
+        <CookieWarning />
         <Footer />
       </Main>
     </>

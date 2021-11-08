@@ -17,6 +17,7 @@ import { FilterInput } from '../components/FilterInput';
 import { MinifiedDevCard } from "../components/MinifiedDevCard";
 import { DevCard } from "../components/DevCard";
 import { SearchForm } from "../components/SearchForm";
+import { CookieWarning } from '../components/CookieWarning';
 
 import { Main, ButtonDarshboardPage, SearchedDevsSection, RecommendedDevsSection, ActionSection } from "../styles/pages/Dashboard";
 
@@ -405,7 +406,7 @@ export default function Home({ usersIds }: dashboardProps) {
             </Link>
           }
         </ActionSection>
-
+        <CookieWarning />
         <Footer />
       </Main>
     </>

@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { LoginButton } from '../components/LoginButton';
+import { CookieWarning } from '../components/CookieWarning';
 
 import { HomeStyled } from '../styles/Home';
 
@@ -72,6 +73,7 @@ export default function Home() {
           Continue as guest
         </Link>
       </div>
+      <CookieWarning />
       <Footer />
     </HomeStyled>
   );
